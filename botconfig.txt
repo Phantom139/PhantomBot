@@ -1,0 +1,5 @@
+[USERNAME]
+irc.chat.twitch.tv
+6667
+#[CHANNEL NAME]
+[OAUTH PASSWORD]
