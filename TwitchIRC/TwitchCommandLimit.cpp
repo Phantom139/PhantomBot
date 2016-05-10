@@ -11,17 +11,25 @@
     TwitchCommandLimit Struct
 **/
 
-TwitchCommandLimit::TwitchCommandLimit(Socket *sO, Admin *a, std::string cName) : currentSendCount(0), forcedSendCount(0), isModOrOp(false), channel(cName) {
+TwitchCommandLimit::TwitchCommandLimit() : aSock(NULL), currentSendCount(0), forcedSendCount(0), isModOrOp(false), channel(), debugMode(false) {
     gettimeofday(&curTVal, 0);
     gettimeofday(&curFVal, 0);
-    if(!sO) {
-        std::cout << "FATAL: TwitchCommandLimit object did not recieve a socket instance" << endl;
-    }
-    aSock = sO;
-    aAdmin = a;
+}
+
+void TwitchCommandLimit::Init(Socket *sO, std::string cName) {
+	if(!sO) {
+		cout << "Cannot init the TCL without a socket" << endl;
+		return;
+	}
+	aSock = sO;
+	channel = cName;
 }
 
 void TwitchCommandLimit::ProcessUserState(const std::string command) {
+	if(!aSock) {
+		cout << "No socket object" << endl;
+		return;
+	}
     //We only need to know if we have op/mod status, look for it...
     if(command.find("mod=1") != string::npos) {
         if(!isModOrOp) {
@@ -81,6 +89,10 @@ void TwitchCommandLimit::PushCommand(const std::string command) {
 }
 
 void TwitchCommandLimit::Update() {
+	if(!aSock) {
+		cout << "No socket object" << endl;
+		return;
+	}
     timeval cur;
     gettimeofday(&cur, 0);
     std::string nextCmd;
@@ -116,6 +128,10 @@ const std::string TwitchCommandLimit::Channel() const {
 }
 
 void TwitchCommandLimit::SendCommand(const std::string command) {
+	if(!aSock) {
+		cout << "No socket object" << endl;
+		return;
+	}
 	std::cout << "BOT: Attempting to send command '" << Lib::formatForPrint(command).c_str() << "' to server." << endl;
     Lib::writeToLog("PhantomBotLog.txt", "{C++} Attempting to send command '" + Lib::formatForPrint(command) + "'.");
     if(!aSock->Send(command)) {
@@ -127,6 +143,13 @@ void TwitchCommandLimit::SendCommand(const std::string command) {
     }
 }
 
-Admin *TwitchCommandLimit::adminObj() const {
-	return aAdmin;
+const bool TwitchCommandLimit::DebugMode() const {
+	return debugMode;
+}
+
+TwitchCommandLimit &TwitchCommandLimit::fetchInstance() {
+	if(managedSingleton<TwitchCommandLimit>::instance() == NULL) {
+		managedSingleton<TwitchCommandLimit>::createInstance();
+	}
+	return *(managedSingleton<TwitchCommandLimit>::instance());
 }

@@ -25,7 +25,9 @@ class Admin {
 		//Check admin status
 		bool CheckAdminStatus(std::string username);
 		//Update the admin list
-		void UpdateAdminList();
+		void UpdateAdminList(); 
+		//Fetch the admin singleton
+		static Admin &fetchInstance();
 	
 	private:
 		/* Private Class Members */

@@ -13,6 +13,8 @@
 #include "TwitchCommandLimit.h"
 #include "Admin.h"
 #include "../TwitchCommands/TwitchCommandProcess.h"
+#include "../CustomCommands/CustomCommands.h"
+#include "../chatCommandDefinitions.h"
 
 /*
 TwitchIRC Class
@@ -44,20 +46,10 @@ class TwitchIRC {
          bool fetchServerMessage(std::string &message);
 
          /* Private Class Members */
-         //CommandLimit instance attached to class
-         TwitchCommandLimit *_tcl;
          //Name of channel connected to
          std::string _connectedChannel;
          //Socket object
          Socket *_socketObj;
-         //Admin user tracker
-         Admin *tAdmin;
-         
-         /* Twitch Command Interfaces */
-         TwitchPing *_tPing;
-         TwitchPrivMsg *_tPrivMsg;
-         TwitchUserState *_tUserState;
-
 };
 
 #endif //_TWITCHIRC_H

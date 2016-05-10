@@ -29,7 +29,9 @@ struct TwitchCommandLimit {
 
     /* Methods */
     //Constructor
-    TwitchCommandLimit(Socket *sO, Admin *a, std::string cName);
+    TwitchCommandLimit();
+    //Init Instance
+    void Init(Socket *sO, std::string cName);
     //Process the USERSTATE message
     void ProcessUserState(const std::string command);
     //Add a command to the process queue
@@ -42,8 +44,10 @@ struct TwitchCommandLimit {
     const std::string Channel() const;
     //Wrapper to send with error check
     void SendCommand(const std::string command);
-    //Expose the Admin object
-    Admin *adminObj() const;
+    //Debug mode on?
+    const bool DebugMode() const;
+    //Fetch singleton instance
+    static TwitchCommandLimit &fetchInstance();
 
     private:
         /* Members */
@@ -63,8 +67,8 @@ struct TwitchCommandLimit {
         timeval curFVal;
         //Attached socket instance
         Socket *aSock;
-        //Attached admin instance
-        Admin *aAdmin;
+        //DEBUG MODE FLAG
+        bool debugMode;
 };
 
 #endif //_TWITCHCOMMANDLIMIT_H

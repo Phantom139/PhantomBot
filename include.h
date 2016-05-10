@@ -22,4 +22,7 @@
 #include <fcntl.h>
 #include <fstream>
 
+//Files needed by ALL other files
+#include "Lib/mSingleton.h"
+
 using namespace std;

@@ -10,7 +10,14 @@
 bool TwitchPing::Process(const std::string incoming) {
     cout << "BOT: Recieved PING request, responding..." << endl;
     Lib::writeToLog("PhantomBotLog.txt", "{Twitch} Recieved PING request, responding...");
-	const std::string response = "PONG :tmi.twitch.tv";
-	_tcl->PushCommand(response);
+	const std::string response = "PONG " + TwitchCommandLimit::fetchInstance().Channel();
+	TwitchCommandLimit::fetchInstance().PushCommand(response);
 	return true;
+}
+
+TwitchPing &TwitchPing::fetchInstance() {
+	if(managedSingleton<TwitchPing>::instance() == NULL) {
+		managedSingleton<TwitchPing>::createInstance();
+	}
+	return *(managedSingleton<TwitchPing>::instance());
 }

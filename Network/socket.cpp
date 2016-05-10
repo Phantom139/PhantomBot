@@ -119,7 +119,7 @@ int Socket::Recieve(std::string &message) const {
     switch(rRet) {
         case -1:
            std::cout << "Socket::Recieve() Status: -1, errno: " << errno << "\n";
-           return 0;
+           return -1;
 
         case 0:
             return 0;

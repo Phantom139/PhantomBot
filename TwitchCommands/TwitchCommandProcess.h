@@ -11,6 +11,7 @@
 #include "../include.h"
 #include "../Lib/lib.h"
 #include "../TwitchIRC/TwitchCommandLimit.h"
+#include "../CustomCommands/CustomCommands.h"
 
 /*
 TwitchCommand Class
@@ -20,19 +21,17 @@ class TwitchCommand {
     public:    
         /* Public Class Methods */
         //Constructor
-        TwitchCommand(TwitchCommandLimit *cmdLmt) : _tcl(cmdLmt) { }
+        TwitchCommand(std::string n) : name(n) { }
         //Destructor
         virtual ~TwitchCommand() { }
         
         //Process the command
         virtual bool Process(const std::string incoming) = 0;
         //Return the name of this command instance
-        virtual const std::string Name() const = 0;
+        virtual const std::string Name() { return name; };
         
-    protected:
-    	/* Protected Class Members */
-    	//The command processing interface
-    	TwitchCommandLimit *_tcl;
+	protected:
+		std::string name;
 };
 
 /*
@@ -43,13 +42,13 @@ class TwitchPing : public TwitchCommand {
 	public:
 		/* Public Class Methods */
 		//Constructor
-		TwitchPing(TwitchCommandLimit *cmdLmt) : TwitchCommand(cmdLmt) { }
+		TwitchPing() : TwitchCommand("Ping") { }
+		//Destructor
+		virtual ~TwitchPing() { }
 		//Process the command
 		virtual bool Process(const std::string incoming);
-		//Return the name of this command instance
-        virtual const std::string Name() const { 
-        	return "Ping";
-        }
+        //Fetch singleton instance
+    	static TwitchPing &fetchInstance();
 };
 
 /*
@@ -60,13 +59,11 @@ class TwitchPrivMsg : public TwitchCommand {
 	public:
 		/* Public Class Methods */
 		//Constructor
-		TwitchPrivMsg(TwitchCommandLimit *cmdLmt) : TwitchCommand(cmdLmt) { }
+		TwitchPrivMsg() : TwitchCommand("PrivMsg") { }
 		//Process the command
 		virtual bool Process(const std::string incoming);
-		//Return the name of this command instance
-        virtual const std::string Name() const { 
-        	return "PrivMsg";
-        }
+        //Fetch singleton instance
+    	static TwitchPrivMsg &fetchInstance();          
         
 	private:
 		/* Private Class Methods */
@@ -82,13 +79,11 @@ class TwitchUserState : public TwitchCommand {
 	public:
 		/* Public Class Methods */
 		//Constructor
-		TwitchUserState(TwitchCommandLimit *cmdLmt) : TwitchCommand(cmdLmt) { }
+		TwitchUserState() : TwitchCommand("UserState") { }
 		//Process the command
 		virtual bool Process(const std::string incoming);
-		//Return the name of this command instance
-        virtual const std::string Name() const { 
-        	return "UserState";
-        }
+        //Fetch singleton instance
+    	static TwitchUserState &fetchInstance();            
 };  
 
 #endif //_TWITCHCOMMANDPROCESS_H

@@ -34,3 +34,10 @@ void Admin::UpdateAdminList() {
 		memset(&line[0], 0, sizeof(line));
 	}
 }
+
+Admin &Admin::fetchInstance() {
+	if(managedSingleton<Admin>::instance() == NULL) {
+		managedSingleton<Admin>::createInstance();
+	}
+	return *(managedSingleton<Admin>::instance());
+}
