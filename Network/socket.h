@@ -12,7 +12,7 @@
 
 #define _MAXHOSTNAME 200
 #define _MAXCONNECTIONS 5
-#define _MAXRECV 500
+#define _MAXRECV 1024
 
 /*
 Socket Class
@@ -58,6 +58,8 @@ class Socket {
         int _msock;  
         //The Socket's address
         sockaddr_in _maddr;
+        //Socket string buffer
+        char *socketBuffer;
 };
 
 

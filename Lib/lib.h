@@ -23,6 +23,8 @@ namespace Lib {
     Socket *createSocketAndConnect(const std::string addr, unsigned int port);
     //Fetch the current timestring
     std::string currentTime();
+    //Fetch UTC time, unsigned integer
+    const unsigned long long fetchTime();
     //Write a log line
     void writeToLog(std::string logLocation, std::string message);
     //Format an incoming command line to strip out /r/n for proper output
@@ -31,6 +33,12 @@ namespace Lib {
     std::string formatChatMessage(const std::string message);
     //Strip the contents of a message into username / message
     void stripMessage(std::string incoming, std::string &username, std::string &message);
+    //Validate an expression
+    bool validateExpr(const std::string incoming, const std::string validTokens);
+    //Tokenize a std::string based on input parameters
+    void tokenizeString(const std::string incoming, const std::vector<char> tokens, std::queue<std::string> &out);
+    //Trim spaces from a std::string
+    std::string strTrim(const std::string &s);
 };
 
 

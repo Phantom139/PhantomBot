@@ -46,6 +46,12 @@ struct TwitchCommandLimit {
     void SendCommand(const std::string command);
     //Debug mode on?
     const bool DebugMode() const;
+    //Admin Only mode?
+    const bool AdminOnlyMode() const;
+    //Set Debug Mode
+    void setDebugMode(bool flag = false) { debugMode = flag; }
+    //Set Admin Mode
+    void setAdminMode(bool flag = false) { adminOnlyMode = flag; }
     //Fetch singleton instance
     static TwitchCommandLimit &fetchInstance();
 
@@ -69,6 +75,8 @@ struct TwitchCommandLimit {
         Socket *aSock;
         //DEBUG MODE FLAG
         bool debugMode;
+        //Admin only mode
+        bool adminOnlyMode;
 };
 
 #endif //_TWITCHCOMMANDLIMIT_H

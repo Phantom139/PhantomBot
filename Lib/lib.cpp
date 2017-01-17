@@ -28,6 +28,18 @@ namespace Lib {
 		s[strlen(s)-1] = 0;
 		return std::string(s);
 	}
+	
+	const unsigned long long fetchTime() {
+		struct timeval tv;
+
+		gettimeofday(&tv, NULL);
+
+		unsigned long long millisecondsSinceEpoch =
+    		(unsigned long long)(tv.tv_sec) * 1000 +
+    		(unsigned long long)(tv.tv_usec) / 1000;
+    		
+    	return millisecondsSinceEpoch;
+	}
 
 	void writeToLog(std::string logLocation, std::string message) {
 	    std::fstream f(logLocation.c_str(), std::fstream::app | std::fstream::out);
@@ -63,5 +75,35 @@ namespace Lib {
 			}
 		}	
 	}
+	
+	bool validateExpr(const std::string incoming, const std::string validTokens) {
+		return incoming.find_first_not_of(validTokens) == std::string::npos;
+	}
+	
+	void tokenizeString(const std::string incoming, const std::vector<char> tokens, std::queue<std::string> &out) {
+		const char *str = incoming.c_str();
+		do {
+			const char *begin = str;
+			for(int i = 0; i < tokens.size(); i++) {
+				while(*str != tokens[i] && *str) {
+				    str++;
+				}
+			}
+			out.push(string(begin, str));
+		} while (0 != *str++);	
+
+	}
+	
+	std::string strTrim(const std::string &s) {
+		std::string::const_iterator it = s.begin();
+		while (it != s.end() && isspace(*it)) {
+		    it++;
+		}
+		std::string::const_reverse_iterator rit = s.rbegin();
+		while (rit.base() != it && isspace(*rit)) {
+		    rit++;
+		}
+		return std::string(it, rit.base());
+	}	
 
 };

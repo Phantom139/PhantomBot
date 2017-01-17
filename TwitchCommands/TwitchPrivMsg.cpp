@@ -15,7 +15,13 @@ bool TwitchPrivMsg::Process(const std::string incoming) {
     cout << "Chat: " << name << ": " << message << endl;
     Lib::writeToLog("PhantomBotLog.txt", "{Chat} " + name + ": " + message);	    
     
-    //Process commands here!!!
+    //Process commands here, but check if we're only doing it for admin users
+    if(TwitchCommandLimit::fetchInstance().AdminOnlyMode()) {
+    	if(!Admin::fetchInstance().CheckAdminStatus(name)) {
+    		//Out of luck, kill here...
+    		return true;
+    	}
+    }
     CustomCommandManager::fetchInstance().Process(incoming);
 
 	return true;

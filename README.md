@@ -1,7 +1,7 @@
 # Phantom Bot Twitch IRC Project
-# CURRENT VERSION: Alpha 2
+# CURRENT VERSION: Alpha 3
 ## By Robert C. Fritzen (Phantom139)
-## Written & Compiled on Ubuntu 14.04.1 LTS
+## Written & Compiled on Ubuntu 16.04 LTS
 
 ### Prerequisites ###
 No Libraries Required!!! This project uses all native Linux code. You'll just need the 'cmake' package to build it!
@@ -34,7 +34,7 @@ First and foremost, create a new C++ Header file, it would help you to follow th
     ccmd_mycommand.h
     PhantomBot Project
     By: Robert F. (Phantom139)
-    Built on Ubuntu 14.04.10 LTS
+    Built on Ubuntu 16.04 LTS
 **/
 
 #ifndef _CCMD_MYCOMMAND_H

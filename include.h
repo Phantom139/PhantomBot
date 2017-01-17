@@ -21,6 +21,8 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <fstream>
+#include <thread>
+#include <chrono>
 
 //Files needed by ALL other files
 #include "Lib/mSingleton.h"

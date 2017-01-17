@@ -16,11 +16,15 @@
 #include "../CustomCommands/CustomCommands.h"
 #include "../chatCommandDefinitions.h"
 
+//Interval in which to ping the server to keep the connection alive, by default it's 4 minutes (240000MS)
+#define PING_INTERVAL 240000
+
 /*
 TwitchIRC Class
 Wrapper instance for connection and persistence
 */
 class TwitchIRC {
+
      public:
          /* Default Stuff */
          //Constructor
@@ -35,6 +39,8 @@ class TwitchIRC {
          void CloseSocket();
          //Check the status of the Socket
          bool SocketActive();
+         //Send ping to server, ran once every 5 minutes to prevent premature disconnect
+         void AutoPing();
 
          /* IRC Commands, Handled by the TwitchCommandLimit class */
          //Send a chat message
@@ -46,6 +52,12 @@ class TwitchIRC {
          bool fetchServerMessage(std::string &message);
 
          /* Private Class Members */
+         //Thread instance which runs the AutoPing command
+         std::thread *autoping_thread;
+         //The address of the IRC Server
+         std::string serverAddr;
+         //The port
+         unsigned int serverPort;
          //Name of channel connected to
          std::string _connectedChannel;
          //Socket object

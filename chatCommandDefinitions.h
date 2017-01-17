@@ -14,6 +14,7 @@
 //Headers to all of your custom commands (Insert the path(s) to your custom command files here)
 #include "CustomCommands/ccmd_time.h"
 #include "CustomCommands/ccmd_isadmin.h"
+#include "CustomCommands/ccmd_adminonly.h"
 
 /*
 ChatCommandDecs Class
@@ -40,7 +41,8 @@ class ChatCommandDecs {
 			}
 			initialized = true;
 			CustomCommandManager::fetchInstance().AddCommand("!time", new Command_Time());
-			CustomCommandManager::fetchInstance().AddCommand("!isadmin", new Command_IsAdmin());		
+			CustomCommandManager::fetchInstance().AddCommand("!isadmin", new Command_IsAdmin());
+			CustomCommandManager::fetchInstance().AddCommand("!adminonly", new Command_AdminOnly());		
 		}
 
 	private:

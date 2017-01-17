@@ -1,0 +1,3 @@
+/home/robert/Desktop/Twitch/PhantomBot/CMakeFiles/edit_cache.dir
+/home/robert/Desktop/Twitch/PhantomBot/CMakeFiles/rebuild_cache.dir
+/home/robert/Desktop/Twitch/PhantomBot/CMakeFiles/PhantomBot.dir

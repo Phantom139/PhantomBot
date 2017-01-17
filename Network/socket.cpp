@@ -9,6 +9,7 @@
 
 Socket::Socket() : _msock(-1) {
     memset(&_maddr, 0, sizeof(_maddr));
+    socketBuffer = new char[_MAXRECV];
 }
 
 Socket::~Socket() {
@@ -110,11 +111,11 @@ bool Socket::Send(const std::string message) const {
 }
 
 int Socket::Recieve(std::string &message) const {
-    char buff[_MAXRECV+1];
     message = "";
-    memset(buff, 0, _MAXRECV+1);
+    memset(socketBuffer, 0, _MAXRECV+1);
     //Try the recieve
-    int rRet = ::recv(_msock, buff, _MAXRECV, 0);
+    int rRet = ::recv(_msock, socketBuffer, _MAXRECV, 0);
+    //cout << "DEBUG: (recv): msock: " << _msock << ", buffer: " << socketBuffer << ", returnCode: " << rRet << endl; 
     //Return commands
     switch(rRet) {
         case -1:
@@ -122,10 +123,11 @@ int Socket::Recieve(std::string &message) const {
            return -1;
 
         case 0:
+        	std::cout << "Socket::Recieve(): Server issued disconnect command.\n";
             return 0;
 
         default:
-            message = buff;
+            message = socketBuffer;
             return rRet;
     }
 }

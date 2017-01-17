@@ -11,7 +11,7 @@
     TwitchIRC Class
 **/
 
-TwitchIRC::TwitchIRC(const std::string nick, const std::string usr, const std::string pass, const std::string addr, unsigned int port, const std::string channel) : _connectedChannel(channel), _socketObj(NULL) {
+TwitchIRC::TwitchIRC(const std::string nick, const std::string usr, const std::string pass, const std::string addr, unsigned int port, const std::string channel) : _connectedChannel(channel), serverAddr(), serverPort(0), _socketObj(NULL), autoping_thread(NULL) {
     cout << "IRCClient: Establishing" << endl;
     Lib::writeToLog("PhantomBotLog.txt", "{C++} Establishing TwitchIRC Instance");
     //Create the socket
@@ -21,6 +21,8 @@ TwitchIRC::TwitchIRC(const std::string nick, const std::string usr, const std::s
         Lib::writeToLog("PhantomBotLog.txt", "{C++} Failed to connect to " + addr + ".");
         return;
     }
+    serverAddr = addr;
+    serverPort = port;
     cout << "Initializing Command Instances" << endl;
     //Init the command limit instance...
     TwitchCommandLimit::fetchInstance().Init(_socketObj, channel);
@@ -57,6 +59,8 @@ TwitchIRC::TwitchIRC(const std::string nick, const std::string usr, const std::s
         TwitchCommandLimit::fetchInstance().PushCommand(cS);
         //Send a intro message to init stuff...
         SendChatMessage("PhantomBot Now Connected to channel...");
+        //Set up AutoPing command
+        autoping_thread = new std::thread(&TwitchIRC::AutoPing, this);
     }
 }
 
@@ -68,6 +72,7 @@ TwitchIRC::~TwitchIRC() {
 void TwitchIRC::Update() {
     std::string response;
     fetchServerMessage(response);
+    //cout << "Server: " << response << endl;
     if(response.size()) {
         //Process messages based on the content
         TwitchCommand *cmd;
@@ -76,6 +81,9 @@ void TwitchIRC::Update() {
         }
         else if(response.find("PING") != string::npos) {
         	TwitchPing::fetchInstance().Process(response);       	
+        }
+        else if(response.find("PONG") != string::npos) {
+        	cout << "BOT: Server connection confirmed..." << endl;
         }
         else if(response.find("USERSTATE") != string::npos) {
         	TwitchUserState::fetchInstance().Process(response);         	
@@ -102,6 +110,17 @@ bool TwitchIRC::SocketActive() {
 	return false;
 }
 
+void TwitchIRC::AutoPing() {
+	std::cout << "BOT: Begin AutoPing Routine" << std::endl;
+	while(SocketActive()) {
+		std::cout << "BOT: Running AutoPing routine to persist connection..." << std::endl;
+		const std::string command = "PING :tmi.twitch.tv\r\n";
+		TwitchCommandLimit::fetchInstance().PushCommand(command);	
+		std::this_thread::sleep_for(std::chrono::milliseconds(PING_INTERVAL));
+	}
+	autoping_thread->join();
+}
+
 bool TwitchIRC::SendChatMessage(const std::string message) {
 	if(!SocketActive()) {
 		return false;
@@ -118,9 +137,22 @@ bool TwitchIRC::fetchServerMessage(std::string &message) {
 		std::string incoming;
 		int result = _socketObj->Recieve(incoming);
 		if(result <= 0) {
-		    //Something went wrong TO-DO: test for timeouts, etc...
-		    std::cout << "An error occurred when recieving a server message, errno: " << errno << std::endl;
-		    return false;
+		    if(errno == 0) {
+		    	//Socket has been closed, re-establish
+		    	cout << "Server has closed socket connection, attempting to re-establish" << endl;
+				_socketObj = Lib::createSocketAndConnect(serverAddr, serverPort);
+				if(!_socketObj) {
+					cout << "Failed to establish connection to " << serverAddr.c_str() << endl;
+					Lib::writeToLog("PhantomBotLog.txt", "{C++} Failed to connect to " + serverAddr + ".");
+					return false;
+				}	
+				cout << "Reconnection Completed..." << endl;
+				return fetchServerMessage(message);	    	
+		    }
+		    else {
+		    	std::cout << "An error occurred when recieving a server message, errno: " << errno << std::endl;
+		    	return false;
+		    }
 		}
 		//check for /r/n
 		message += incoming;

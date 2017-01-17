@@ -147,6 +147,10 @@ const bool TwitchCommandLimit::DebugMode() const {
 	return debugMode;
 }
 
+const bool TwitchCommandLimit::AdminOnlyMode() const {
+	return adminOnlyMode;
+}
+
 TwitchCommandLimit &TwitchCommandLimit::fetchInstance() {
 	if(managedSingleton<TwitchCommandLimit>::instance() == NULL) {
 		managedSingleton<TwitchCommandLimit>::createInstance();
