@@ -25,6 +25,7 @@
 #include <chrono>
 
 //Files needed by ALL other files
+#include "Lib/exception.h"
 #include "Lib/mSingleton.h"
 
 using namespace std;

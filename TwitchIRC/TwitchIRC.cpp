@@ -11,7 +11,7 @@
     TwitchIRC Class
 **/
 
-TwitchIRC::TwitchIRC(const std::string nick, const std::string usr, const std::string pass, const std::string addr, unsigned int port, const std::string channel) : _connectedChannel(channel), serverAddr(), serverPort(0), _socketObj(NULL), autoping_thread(NULL) {
+TwitchIRC::TwitchIRC(const string nick, const string usr, const string pass, const string addr, unsigned int port, const string channel) : _connectedChannel(channel), serverAddr(), serverPort(0), _socketObj(NULL), autoping_thread(NULL) {
     cout << "IRCClient: Establishing" << endl;
     Lib::writeToLog("PhantomBotLog.txt", "{C++} Establishing TwitchIRC Instance");
     //Create the socket
@@ -31,9 +31,9 @@ TwitchIRC::TwitchIRC(const std::string nick, const std::string usr, const std::s
     //Construct the login token
     cout << "IRCClient: Establishing login token" << endl;
     Lib::writeToLog("PhantomBotLog.txt", "{C++} Establishing TwitchIRC Login Token");
-    const std::string pS = string("PASS " + pass + "\r\n");
-    const std::string nS = string("NICK " + nick + "\r\n");
-    const std::string uS = string("USER " + usr + "\r\n");
+    const string pS = string("PASS " + pass + "\r\n");
+    const string nS = string("NICK " + nick + "\r\n");
+    const string uS = string("USER " + usr + "\r\n");
     //Password must be sent first, then our information
     if(pS.size()) {
         TwitchCommandLimit::fetchInstance().PushCommand(pS);
@@ -41,7 +41,7 @@ TwitchIRC::TwitchIRC(const std::string nick, const std::string usr, const std::s
     TwitchCommandLimit::fetchInstance().PushCommand(nS);
     TwitchCommandLimit::fetchInstance().PushCommand(uS);
     //Wait for the welcome reply...
-    std::string response;
+    string response;
     fetchServerMessage(response);
     if(response.find("Welcome") == string::npos) {
         //We failed...
@@ -51,16 +51,20 @@ TwitchIRC::TwitchIRC(const std::string nick, const std::string usr, const std::s
     }
     else {
         //Enable advanced commnads
-        const std::string aCS = string("CAP REQ :twitch.tv/commands\r\nCAP REQ :twitch.tv/membership\r\nCAP REQ :twitch.tv/tags\r\n");
-        TwitchCommandLimit::fetchInstance().PushCommand(aCS);
+        const string aCS1 = string("CAP REQ :twitch.tv/commands\r\n");
+        const string aCS2 = string("CAP REQ :twitch.tv/membership\r\n");
+        const string aCS3 = string("CAP REQ :twitch.tv/tags\r\n");
+        TwitchCommandLimit::fetchInstance().PushCommand(aCS1);
+        TwitchCommandLimit::fetchInstance().PushCommand(aCS2);
+        TwitchCommandLimit::fetchInstance().PushCommand(aCS3);
         Lib::writeToLog("PhantomBotLog.txt", "{Twitch} Connected to TwitchIRC, connecting to channel '#" + channel + "'.");
         //And finally... connect to the channel
-        const std::string cS = string("JOIN " + channel + "\r\n");
+        const string cS = string("JOIN " + channel + "\r\n");
         TwitchCommandLimit::fetchInstance().PushCommand(cS);
         //Send a intro message to init stuff...
         SendChatMessage("PhantomBot Now Connected to channel...");
         //Set up AutoPing command
-        autoping_thread = new std::thread(&TwitchIRC::AutoPing, this);
+        autoping_thread = new thread(&TwitchIRC::AutoPing, this);
     }
 }
 
@@ -70,7 +74,7 @@ TwitchIRC::~TwitchIRC() {
 }
 
 void TwitchIRC::Update() {
-    std::string response;
+    string response;
     fetchServerMessage(response);
     //cout << "Server: " << response << endl;
     if(response.size()) {
@@ -111,30 +115,30 @@ bool TwitchIRC::SocketActive() {
 }
 
 void TwitchIRC::AutoPing() {
-	std::cout << "BOT: Begin AutoPing Routine" << std::endl;
+	cout << "BOT: Begin AutoPing Routine" << endl;
 	while(SocketActive()) {
-		std::cout << "BOT: Running AutoPing routine to persist connection..." << std::endl;
-		const std::string command = "PING :tmi.twitch.tv\r\n";
+		cout << "BOT: Running AutoPing routine to persist connection..." << endl;
+		const string command = "PING :tmi.twitch.tv\r\n";
 		TwitchCommandLimit::fetchInstance().PushCommand(command);	
-		std::this_thread::sleep_for(std::chrono::milliseconds(PING_INTERVAL));
+		this_thread::sleep_for(chrono::milliseconds(PING_INTERVAL));
 	}
 	autoping_thread->join();
 }
 
-bool TwitchIRC::SendChatMessage(const std::string message) {
+bool TwitchIRC::SendChatMessage(const string message) {
 	if(!SocketActive()) {
 		return false;
 	}
-	std::cout << "BOT: Sending Message: " << Lib::formatForPrint(message).c_str() << "..." << std::endl;
+	cout << "BOT: Sending Message: " << Lib::formatForPrint(message).c_str() << "..." << endl;
 	Lib::writeToLog("PhantomBotLog.txt", "{Twitch} Sending Message " + Lib::formatForPrint(message) + "...");
-	const std::string format = "PRIVMSG " + _connectedChannel + " :" + message + "\r\n";
+	const string format = "PRIVMSG " + _connectedChannel + " :" + message + "\r\n";
 	//Add it to the queue
 	TwitchCommandLimit::fetchInstance().AddCommand(format);
 }
 
-bool TwitchIRC::fetchServerMessage(std::string &message) {
+bool TwitchIRC::fetchServerMessage(string &message) {
 	while(SocketActive()) {
-		std::string incoming;
+		string incoming;
 		int result = _socketObj->Recieve(incoming);
 		if(result <= 0) {
 		    if(errno == 0) {
@@ -150,7 +154,7 @@ bool TwitchIRC::fetchServerMessage(std::string &message) {
 				return fetchServerMessage(message);	    	
 		    }
 		    else {
-		    	std::cout << "An error occurred when recieving a server message, errno: " << errno << std::endl;
+		    	cout << "An error occurred when recieving a server message, errno: " << errno << endl;
 		    	return false;
 		    }
 		}
@@ -161,7 +165,7 @@ bool TwitchIRC::fetchServerMessage(std::string &message) {
 		}
 		//Too big...
 		if(message.size() > LIMIT_16) {
-			std::cout << "Endless buffer error, closing socket" << std::endl;
+			cout << "Endless buffer error, closing socket" << endl;
 			CloseSocket();
 		}
 	}
