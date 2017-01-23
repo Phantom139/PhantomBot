@@ -47,9 +47,11 @@
 	#if defined(PHANTOMBOT_WINDOWS)
 		#include "Windows/platformWindows.h"
 		#include "Windows/loadWindows.h"
+		#include "Windows/windowsTime.h"
 	#elif defined(PHANTOMBOT_LINUX)
 		#include "Linux/platformLinux.h"
 		#include "Linux/loadLinux.h"
+		#include "Linux/linuxTime.h"
 	#else
 		#error "How did you get here?"
 	#endif

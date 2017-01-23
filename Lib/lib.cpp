@@ -22,20 +22,18 @@ namespace Lib {
 	}
 
 	string currentTime() {
-		time_t t = time(NULL);
-		ACHAR *s = ctime(&t);
-		s[strlen(s)-1] = 0;
-		return string(s);
+		string currentTime = Time::fetchTimestamp();
+		return currentTime;
 	}
 	
 	const U64 fetchTime() {
-		struct timeval tv;
+		TimeVars tv;
 
-		gettimeofday(&tv, NULL);
+		Time::utcTime(tv);
 
 		unsigned long long millisecondsSinceEpoch =
-    		(unsigned long long)(tv.tv_sec) * 1000 +
-    		(unsigned long long)(tv.tv_usec) / 1000;
+    		(unsigned long long)(tv.seconds) * 1000 +
+    		(unsigned long long)(tv.miliseconds) / 1000;
     		
     	return millisecondsSinceEpoch;
 	}

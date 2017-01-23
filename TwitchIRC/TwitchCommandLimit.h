@@ -67,9 +67,9 @@ struct TwitchCommandLimit {
         //Do we have mod status?
         bool isModOrOp;
         //The timeval at the time of the currentSendCount initiation
-        timeval curTVal;
+        TimeVars curTVal;
         //The timeval at the time of the forcedSendCount initiation
-        timeval curFVal;
+        TimeVars curFVal;
         //Attached socket instance
         Socket *aSock;
         //DEBUG MODE FLAG

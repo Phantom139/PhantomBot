@@ -75,9 +75,9 @@ struct TimeVars {
 
 class GTime {
 	public:
-		static UTF16 fetchTimestamp();
-		static void fetchSysTime(UFC32 dst);
-		static void fetchDateString(UFC32 dst);
+		static UFC32 fetchTimestamp();
+		static void fetchSysTime(ACHAR *dst);
+		static void fetchDateString(ACHAR *dst);
 
 		/* If we have access to <sys/time.h>, define the time overlay */
 		#if USE_SYS_TIME == 1

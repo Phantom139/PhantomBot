@@ -11,8 +11,8 @@
 **/
 
 TwitchCommandLimit::TwitchCommandLimit() : aSock(NULL), currentSendCount(0), forcedSendCount(0), isModOrOp(false), channel(), debugMode(false) {
-    gettimeofday(&curTVal, 0);
-    gettimeofday(&curFVal, 0);
+	Time::utcTime(curTVal);
+	Time::utcTime(curFVal);
 }
 
 void TwitchCommandLimit::Init(Socket *sO, string cName) {
@@ -54,9 +54,10 @@ void TwitchCommandLimit::PushCommand(const string command) {
     Lib::writeToLog("PhantomBotLog.txt", "{C++} Attempting to push command '" + Lib::formatForPrint(command) + "'.");
     cout << "BOT: Command '" << command.c_str() << "' added to queue under FORCE priority.. attempting to send now." << endl;
     //Check if it's been 30s since our last "push"
-    timeval cur;
-    gettimeofday(&cur, 0); 
-    if((cur.tv_sec - curFVal.tv_sec) >= 30) {
+    TimeVars cur;
+    Time::utcTime(cur); 
+	//TODO: UPDATE!!! NEED UTC STRING (IE: BIG #)
+    if((cur.seconds - curFVal.seconds) >= 30) {
         forcedSendCount = 0;
     }
     //If it hasn't been 30s, we need to verify that we have "allocation" available to force a mesage through
@@ -73,7 +74,7 @@ void TwitchCommandLimit::PushCommand(const string command) {
         else {
             //We have some space in the normal queue, run it there
             if(currentSendCount == 0) {
-                gettimeofday(&curTVal, 0);
+				Time::utcTime(curTVal);
     		}
     		currentSendCount++;
     		SendCommand(command);
@@ -81,7 +82,7 @@ void TwitchCommandLimit::PushCommand(const string command) {
     }
     //We've got some room, fire it!
     if(forcedSendCount == 0) {
-        gettimeofday(&curFVal, 0);
+		Time::utcTime(curFVal);
     }
     forcedSendCount++;
     SendCommand(command);                       
@@ -92,11 +93,11 @@ void TwitchCommandLimit::Update() {
 		cout << "No socket object" << endl;
 		return;
 	}
-    timeval cur;
-    gettimeofday(&cur, 0);
+	TimeVars cur;
+	Time::utcTime(cur);
     string nextCmd;
     //Check the time
-    if((cur.tv_sec - curTVal.tv_sec) >= 30) {
+    if((cur.seconds - curTVal.seconds) >= 30) {
         //All good!
         currentSendCount = 0;
     }
@@ -114,7 +115,7 @@ void TwitchCommandLimit::Update() {
         commands.pop();
         //Add one to our counter, set the timer if zero
         if(currentSendCount == 0) {
-            gettimeofday(&curTVal, 0);
+			Time::utcTime(curTVal);
         }
         currentSendCount++;
         //Send it!          
@@ -133,7 +134,7 @@ void TwitchCommandLimit::SendCommand(const string command) {
 	}
 	cout << "BOT: Attempting to send command '" << Lib::formatForPrint(command).c_str() << "' to server." << endl;
     Lib::writeToLog("PhantomBotLog.txt", "{C++} Attempting to send command '" + Lib::formatForPrint(command) + "'.");
-    if(!aSock->Send(command)) {
+    if(!aSock->Send(command.c_str())) {
         Lib::writeToLog("PhantomBotLog.txt", "{C++} Command delivery failed.");
     	cout << "BOT: Command '" << Lib::formatForPrint(command).c_str() << "' failed to send." << endl;        	
     }

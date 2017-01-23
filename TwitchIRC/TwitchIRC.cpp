@@ -144,7 +144,7 @@ bool TwitchIRC::fetchServerMessage(string &message) {
 		    if(errno == 0) {
 		    	//Socket has been closed, re-establish
 		    	cout << "Server has closed socket connection, attempting to re-establish" << endl;
-				_socketObj = Lib::createSocketAndConnect(serverAddr, serverPort);
+				_socketObj = Lib::createSocketAndConnect(serverAddr.c_str(), serverPort);
 				if(!_socketObj) {
 					cout << "Failed to establish connection to " << serverAddr.c_str() << endl;
 					Lib::writeToLog("PhantomBotLog.txt", "{C++} Failed to connect to " + serverAddr + ".");
