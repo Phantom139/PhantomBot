@@ -2,7 +2,6 @@
     jsonLexer.h
     PhantomBot Project
     By: Robert F. (Phantom139)
-    Built on Ubuntu 16.04 LTS
 **/
 
 #ifndef _JSONLEXER_H

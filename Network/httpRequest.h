@@ -2,7 +2,6 @@
     httpRequest.h
     PhantomBot Project
     By: Robert F. (Phantom139)
-    Built on Ubuntu 14.04.10 LTS
 **/
 
 #ifndef _HTTPREQUEST_H

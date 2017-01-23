@@ -2,7 +2,6 @@
     jsonReader.cpp
     PhantomBot Project
     By: Robert F. (Phantom139)
-    Built on Ubuntu 16.04 LTS
 **/
 
 #include "jsonReader.h"

@@ -1,6 +1,8 @@
-/*
- managedSingleton is a class based on the design of the boost library singleton class (boost::singleton). This class allows you to define a single "instance" class that is specific to the entire engine, IE: only one instance of this class can everbe defined. To define a managedSingleton, the syntax is: managedSingleton<Class>::createInstance(); It is also recommended to define a static UTF16 getInstanceName() method in managedSingleton classes for organization and identification by name.
-*/
+/**
+	mSingleton.h
+	PhantomBot Project
+	By: Robert F. (Phantom139)
+**/
 
 #ifndef _MANAGEDSINGLETON_H
 #define _MANAGEDSINGLETON_H
