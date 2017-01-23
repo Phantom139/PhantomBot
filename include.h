@@ -4,18 +4,22 @@
     By: Robert F. (Phantom139)
 **/
 
+#include "Platform/platform.h"
+
+
+#include <new>
+#include <wchar.h>
+#include <stddef.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdarg.h>
+#include <math.h>
+#include <float.h>
+#include <string.h>
 #include <algorithm>
 #include <iostream>
 #include <vector>
 #include <queue>
-#include <string.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <netdb.h>
-#include <unistd.h>
-#include <arpa/inet.h>
-#include <sys/time.h>
 #include <time.h>
 #include <errno.h>
 #include <fcntl.h>
