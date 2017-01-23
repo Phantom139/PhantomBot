@@ -6,11 +6,11 @@
 
 #include "TwitchCommandProcess.h"
 
-bool TwitchPing::Process(const std::string incoming) {
+bool TwitchPing::Process(const string incoming) {
     cout << "BOT: Recieved PING request, responding..." << endl;
     Lib::writeToLog("PhantomBotLog.txt", "{Twitch} Recieved PING request, responding...");
-	//const std::string response = "PONG " + TwitchCommandLimit::fetchInstance().Channel();
-	const std::string response = "PONG :tmi.twitch.tv\r\n";
+	//const string response = "PONG " + TwitchCommandLimit::fetchInstance().Channel();
+	const string response = "PONG :tmi.twitch.tv\r\n";
 	TwitchCommandLimit::fetchInstance().PushCommand(response);
 	return true;
 }

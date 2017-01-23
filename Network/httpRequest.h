@@ -29,11 +29,11 @@ class HTTPRequest {
     	const string received() { return response; }
     	
     private:
-    	char sendBuffer[_SEND_BUFFER_SIZE];
+    	ACHAR sendBuffer[_SEND_BUFFER_SIZE];
     	string request;
     	string response;
 
-        int _msock;  
+        S32 _msock;  
         sockaddr_in _maddr;    	
         
         bool sent;

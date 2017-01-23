@@ -27,7 +27,7 @@ class TwitchIRC {
      public:
          /* Default Stuff */
          //Constructor
-         TwitchIRC(const std::string nick, const std::string usr, const std::string pass, const std::string addr, unsigned int port, const std::string channel);    
+         TwitchIRC(UFC32 nick, UFC32 usr, UFC32 pass, UFC32 addr, U32 port, UFC32 channel);
          //Destructor
          ~TwitchIRC();
 
@@ -43,22 +43,22 @@ class TwitchIRC {
 
          /* IRC Commands, Handled by the TwitchCommandLimit class */
          //Send a chat message
-         bool SendChatMessage(const std::string message);
+         bool SendChatMessage(UFC32 message);
 
      private:
          /* Private Class Methods */
          //Function called during the update to check for new messages
-         bool fetchServerMessage(std::string &message);
+         bool fetchServerMessage(string &message);
 
          /* Private Class Members */
          //Thread instance which runs the AutoPing command
-         std::thread *autoping_thread;
+         thread *autoping_thread;
          //The address of the IRC Server
-         std::string serverAddr;
+         string serverAddr;
          //The port
-         unsigned int serverPort;
+         U32 serverPort;
          //Name of channel connected to
-         std::string _connectedChannel;
+         string _connectedChannel;
          //Socket object
          Socket *_socketObj;
 };

@@ -17,8 +17,8 @@ class Command_Time : public CustomCommand {
 		//Destructor
 		virtual ~Command_Time() { }
 		//Run the command
-		virtual void Fire(std::string input) {
-			std::string response = Lib::formatChatMessage("It is currently " + Lib::currentTime() + ".");
+		virtual void Fire(string input) {
+			string response = Lib::formatChatMessage("It is currently " + Lib::currentTime() + ".");
 			TwitchCommandLimit::fetchInstance().AddCommand(response);			
 		}
 };

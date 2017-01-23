@@ -21,8 +21,8 @@ bool HTTPRequest::makeSocket() {
     if(!IsValid()) {
         return false;
     }
-    int on = 1;
-    if(::setsockopt(_msock, SOL_SOCKET, SO_REUSEADDR, (const char *)&on, sizeof(on)) == -1) {
+    S32 on = 1;
+    if(::setsockopt(_msock, SOL_SOCKET, SO_REUSEADDR, (UFC32)&on, sizeof(on)) == -1) {
         return false;
     }
     return true;
@@ -64,7 +64,7 @@ bool HTTPRequest::sendGETRequest(string url, string remainingAddr) {
 	request += "Connection: Close\r\n";
 	request += "\r\n\r\n";
 	//Send the request
-	if(::send(_msock, request.c_str(), request.length(), 0) != (int)request.length()) {
+	if(::send(_msock, request.c_str(), request.length(), 0) != (S32)request.length()) {
 		cout << "HTTPRequest::sendGETRequest(): Something went wrong in the send buffer." << endl;
 		return false;
 	}	

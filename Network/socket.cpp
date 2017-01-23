@@ -8,7 +8,7 @@
 
 Socket::Socket() : _msock(-1) {
     memset(&_maddr, 0, sizeof(_maddr));
-    socketBuffer = new char[_MAXRECV];
+    socketBuffer = new ACHAR[_MAXRECV];
 }
 
 Socket::~Socket() {
@@ -24,8 +24,8 @@ bool Socket::Create() {
         return false;
     }
     //Init the Socket
-    int on = 1;
-    if(setsockopt(_msock, SOL_SOCKET, SO_REUSEADDR, (const char *)&on, sizeof(on)) == -1) {
+    S32 on = 1;
+	if(setsockopt(_msock, SOL_SOCKET, SO_REUSEADDR, (UFC32)&on, sizeof(on)) == -1) {
         //Init failed
         return false;
     }
@@ -33,7 +33,7 @@ bool Socket::Create() {
     return true;
 }
 
-bool Socket::Bind(const unsigned int port) {
+bool Socket::Bind(const U32 port) {
     if(!IsValid()) {
         return false;
     }
@@ -42,7 +42,7 @@ bool Socket::Bind(const unsigned int port) {
     _maddr.sin_addr.s_addr = INADDR_ANY;
     _maddr.sin_port = htons(port);
     //Bind the port
-    int bRet = ::bind(_msock, (struct sockaddr *)&_maddr, sizeof(_maddr));
+    S32 bRet = ::bind(_msock, (struct sockaddr *)&_maddr, sizeof(_maddr));
     if(bRet == -1) {
         return false;
     }
@@ -53,7 +53,7 @@ bool Socket::Listen() const {
     if(!IsValid()) {
         return false;
     }
-    int lRet = ::listen(_msock, _MAXCONNECTIONS);
+    S32 lRet = ::listen(_msock, _MAXCONNECTIONS);
     if(lRet == -1) {
         return false;
     }
@@ -61,7 +61,7 @@ bool Socket::Listen() const {
 }
 
 bool Socket::Accept(Socket &s) const {
-    int aLen = sizeof(_maddr);
+    S32 aLen = sizeof(_maddr);
     s._msock = ::accept(_msock, (sockaddr *)&_maddr, (socklen_t *)&aLen);
     if(s._msock <= 0) {
         return false;
@@ -69,14 +69,14 @@ bool Socket::Accept(Socket &s) const {
     return true;
 }
 
-bool Socket::Connect(const std::string host, const unsigned int port) {
+bool Socket::Connect(UFC32 host, const U32 port) {
     if(!IsValid()) {
         return false;
     }
     //UNIX pre-connect vars
     struct hostent *he;
-    if((he = gethostbyname(host.c_str())) == NULL) {
-    	cout << "Socket::Connect(): Failed to convert " << host.c_str() << " to an IP" << endl;
+    if((he = gethostbyname(host)) == NULL) {
+    	cout << "Socket::Connect(): Failed to convert " << host << " to an IP" << endl;
     }
     _maddr.sin_family = AF_INET;
     _maddr.sin_port = htons(port);
@@ -84,12 +84,12 @@ bool Socket::Connect(const std::string host, const unsigned int port) {
     //Are we allowed to create a connection?
     //cout << "Socket::Connect(): Attempting to establish connection to " << host.c_str() << ":" << port << " (" << he->h_addr_list[0] << ")" << endl;
     //Yes, Connect...
-    int status = ::connect(_msock, (sockaddr *)&_maddr, sizeof(_maddr));
+    S32 status = ::connect(_msock, (sockaddr *)&_maddr, sizeof(_maddr));
     if(status == 0) {
        //cout << "Socket::Connect(): Connection Successful..." << endl;
        return true;
     }
-    std::cout << "Socket::Connect(): Failed to connect: " << status << ", errno " << errno << endl;
+    cout << "Socket::Connect(): Failed to connect: " << status << ", errno " << errno << endl;
     return false;    
 }
 
@@ -97,34 +97,34 @@ bool Socket::Close() {
     if(!IsValid()) {
         return false;       
     }
-    int cRet = ::close(_msock);
+    S32 cRet = ::close(_msock);
     return cRet == 0;
 }
 
-bool Socket::Send(const std::string message) const {
-    int sRet = ::send(_msock, message.c_str(), message.size(), MSG_NOSIGNAL);
+bool Socket::Send(UFC32 message) const {
+    S32 sRet = ::send(_msock, message, strlen(message), MSG_NOSIGNAL);
     if(sRet == -1) { 
         return false;
     }
     return true;
 }
 
-int Socket::Recieve(std::string &message) const {
+int Socket::Recieve(string &message) const {
     message = "";
     memset(socketBuffer, 0, _MAXRECV+1);
-    int total = sizeof(socketBuffer) - 1;
-    int received = 0;
+    S32 total = sizeof(socketBuffer) - 1;
+    S32 received = 0;
     //Try the recieve
-    int rRet = ::recv(_msock, socketBuffer, _MAXRECV, 0);
+    S32 rRet = ::recv(_msock, socketBuffer, _MAXRECV, 0);
     //cout << "DEBUG: (recv): msock: " << _msock << ", buffer: " << socketBuffer << ", returnCode: " << rRet << endl; 
     //Return commands
     switch(rRet) {
         case -1:
-           std::cout << "Socket::Recieve() Status: -1, errno: " << errno << "\n";
+           cout << "Socket::Recieve() Status: -1, errno: " << errno << "\n";
            return -1;
 
         case 0:
-        	std::cout << "Socket::Recieve(): Server issued disconnect command.\n";
+        	cout << "Socket::Recieve(): Server issued disconnect command.\n";
             return 0;
 
         default:
@@ -134,7 +134,7 @@ int Socket::Recieve(std::string &message) const {
 }
 
 void Socket::SetNonBlocking(const bool status) {
-	int options;
+	S32 options;
     options = fcntl(_msock, F_GETFL);
     if(options < 0) {
         return;

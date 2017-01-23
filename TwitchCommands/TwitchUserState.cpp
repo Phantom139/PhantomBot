@@ -6,7 +6,7 @@
 
 #include "TwitchCommandProcess.h"
 
-bool TwitchUserState::Process(const std::string incoming) {
+bool TwitchUserState::Process(const string incoming) {
     cout << "BOT: Recieved USERSTATE Command: '" << Lib::formatForPrint(incoming).c_str() << "'." << endl;
     Lib::writeToLog("PhantomBotLog.txt", "{Twitch} Recieved USERSTATE Command: '" + Lib::formatForPrint(incoming) + "'.");
 	TwitchCommandLimit::fetchInstance().ProcessUserState(incoming);

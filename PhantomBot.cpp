@@ -8,11 +8,11 @@
 #include "TwitchIRC/TwitchIRC.h"
 
 int main(void) {
-	srand((unsigned int)time(NULL));
+	srand((U32)time(NULL));
 	//read the config
-	char line[512];
-	std::vector<std::string> config;
-	std::fstream f("botconfig.txt", std::ios::in);
+	ACHAR line[512];
+	vector<string> config;
+	fstream f("botconfig.txt", ios::in);
 	while(!f.eof()) {
 		f.getline(line, 512);
 		config.push_back(line);
@@ -20,14 +20,14 @@ int main(void) {
 	}
 	//Set stuff up...
 	if(config.size() >= 5) {
-		TwitchIRC irc(config[0], config[0], config[4], config[1], (unsigned int)atoi(config[2].c_str()), config[3]);
+		TwitchIRC irc(config[0], config[0], config[4], config[1], (U32)atoi(config[2].c_str()), config[3]);
 		while(irc.SocketActive()) {
 			irc.Update();
 		}
 	}
 	else {
-		std::cout << "There was an error in your 'botconfig.txt' file, contact Phantom139 for support" << endl;
+		cout << "There was an error in your 'botconfig.txt' file, contact Phantom139 for support" << endl;
 	}
-	std::cout << "Closing program..." << endl;
+	cout << "Closing program..." << endl;
 	return 0;
 }

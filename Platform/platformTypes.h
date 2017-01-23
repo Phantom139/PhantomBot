@@ -55,6 +55,10 @@ struct GPlatformTypes {
 	typedef sizettype<s_int_32, s_int_64, sizeof(void *)>::sizet_ptr S_SIZET_PTR;
 	typedef U_SIZET_PTR SIZE_T;
 	typedef S_SIZET_PTR SIZE_T_S;
+
+	//others
+	typedef signed long s_long;
+	typedef unsigned long u_long;
 };
 
 #endif //PLATFORM_TYPES_H

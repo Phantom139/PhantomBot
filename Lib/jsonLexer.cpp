@@ -12,16 +12,16 @@ namespace JSON {
 		StringStream Class
 	**/
 
-	char StringStream::peek() {
-		char retChar = '\0';
+	ACHAR StringStream::peek() {
+		ACHAR retChar = '\0';
 		if(strCPos < strEnd) {
 			retChar = *strCPos;
 		}
 		return retChar;
 	}
 	
-	char StringStream::get() {
-		char retChar = '\0'
+	ACHAR StringStream::get() {
+		ACHAR retChar = '\0';
 		if(strCPos < strEnd) {
 			retChar = *strCPos;
 			updatePosition(retChar);
@@ -35,9 +35,9 @@ namespace JSON {
 		}
 	}
 	
-	bool StringStream::nextCharsMatch(const char *test) {
+	bool StringStream::nextCharsMatch(UFC32 test) {
 		bool result = true;
-		const char *tmp = strCPos;
+		UFC32 tmp = strCPos;
 		while(result == true && (tmp < strEnd && test && *test)) {
 			if(tolower(*test) != tolower(*tmp)) {
 				result = false;
@@ -53,15 +53,15 @@ namespace JSON {
 		return result;
 	}
 	
-	int StringStream::lNum() const {
+	S32 StringStream::lNum() const {
 		return cLine;
 	}
 	
-	int StringStream::curPos() const {
+	S32 StringStream::curPos() const {
 		return cPos;
 	}
 	
-	void StringStream::updatePosition(char tChar) {
+	void StringStream::updatePosition(ACHAR tChar) {
 		if(tChar == '\n') {
 			cLine++;
 			cPos = 1;
@@ -73,7 +73,7 @@ namespace JSON {
 	**/	
 	Token Lexer::readNext() {
 		Token t;
-		char c = '\0';
+		ACHAR c = '\0';
 		while(t.getType() == UNKNOWN) {
 			c = srcStream->get();
 			//Skip spaces, end of lines, etc
@@ -84,8 +84,8 @@ namespace JSON {
 			c = static_cast<char>(tolower(c));
 			//Scan different charachters, set token
 			if(c == '\0') {
-				t.set(EOF);
-				t.set("EOF");
+				t.set(TEOF);
+				t.set("TEOF");
 			} 
 			else if(c == '{') {
 				t.set(OBJECT_BEGIN);
@@ -103,7 +103,7 @@ namespace JSON {
 				t.set(ARRAY_END);
 				t.set("]");
 			}
-			else if(c == ",") {
+			else if(c == ',') {
 				t.set(COMMA);
 				t.set(",");
 			}
@@ -138,21 +138,21 @@ namespace JSON {
 				t = readFromNumber(c);
 			}
 			else {
-				conditionalException(srcStream, true, "Invalid Charachter: '" + c + "'.");
+				conditionalException(srcStream, true, "Invalid Character: " + c );
 			}
 		}
 		return t;
 	}
 	
-	int Lexer::lNum() const {
+	S32 Lexer::lNum() const {
 		return srcStream->lNum();
 	}
 	
-	int Lexer::curPos() const {
+	S32 Lexer::curPos() const {
 		return srcStream->curPos();
 	}
 	
-	uint8_t Lexer::readFromHex(char c) {
+	U8 Lexer::readFromHex(ACHAR c) {
 		if(c >= '0' && c <= '9') {
 			return c - '0';
 		}
@@ -164,7 +164,7 @@ namespace JSON {
 		}
 	}
 	
-	Token Lexer::readFromString(char c) {
+	Token Lexer::readFromString(ACHAR c) {
 		Token t;
 		while(t.getType() == UNKNOWN) {
 			c = srcStream->get();
@@ -194,10 +194,10 @@ namespace JSON {
 					t += '\r';
 				}
 				else if(c == 'u') {
-					unsigned long pt = 0;
-					for(size_t i = 0; i < 4; i++) {
+					UL pt = 0;
+					for(SIZE_T i = 0; i < 4; i++) {
 						c = srcStream->get();
-						uint8_t digit = 0;
+						U8 digit = 0;
 						conditionalException(srcStream, c == '\0', "Unterminated string instance");
 						conditionalException(srcStream, c == '"', "Invalid Unicode escape sequence");
 						conditionalException(srcStream, !isxdigit(c), "Invalid unicode escape sequuence formatting");
@@ -207,14 +207,14 @@ namespace JSON {
 					}
 					//Format codepoint accordingly
 					if(pt < 0x80) {
-						t += (char)pt;
+						t += (ACHAR)pt;
 					}
 					else if(pt < 0x800) {
-						t += (char)(0xC0 | (pt >> 6));
+						t += (ACHAR)(0xC0 | (pt >> 6));
 						t += (0x80 | (pt & 0x3F));
 					}
 					else {
-						t += (char)(0xE0 | (pt >> 12));
+						t += (ACHAR)(0xE0 | (pt >> 12));
 						t += (0x80 | ((pt >> 6) & 0x3F));
 						t += (0x80 | (pt & 0x3F));
 					}
@@ -230,7 +230,7 @@ namespace JSON {
 		return t;
 	}
 	
-	Token Lexer::readFromNumber(char c) {
+	Token Lexer::readFromNumber(ACHAR c) {
 		Token t;
 		t.set(NUMERIC);
 		t += c;
@@ -263,7 +263,7 @@ namespace JSON {
 		return t;
 	}
 	
-	bool Lexer::charIsSign(char c) {
+	bool Lexer::charIsSign(ACHAR c) {
 		return (c == '+' || c == '-');
 	}
 	

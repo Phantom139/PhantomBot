@@ -15,7 +15,7 @@ TwitchCommandLimit::TwitchCommandLimit() : aSock(NULL), currentSendCount(0), for
     gettimeofday(&curFVal, 0);
 }
 
-void TwitchCommandLimit::Init(Socket *sO, std::string cName) {
+void TwitchCommandLimit::Init(Socket *sO, string cName) {
 	if(!sO) {
 		cout << "Cannot init the TCL without a socket" << endl;
 		return;
@@ -24,7 +24,7 @@ void TwitchCommandLimit::Init(Socket *sO, std::string cName) {
 	channel = cName;
 }
 
-void TwitchCommandLimit::ProcessUserState(const std::string command) {
+void TwitchCommandLimit::ProcessUserState(const string command) {
 	if(!aSock) {
 		cout << "No socket object" << endl;
 		return;
@@ -32,27 +32,27 @@ void TwitchCommandLimit::ProcessUserState(const std::string command) {
     //We only need to know if we have op/mod status, look for it...
     if(command.find("mod=1") != string::npos) {
         if(!isModOrOp) {
-        	std::cout << "BOT: Gained Op/Mod Status..." << endl;
+        	cout << "BOT: Gained Op/Mod Status..." << endl;
         }
         isModOrOp = true;
     }
     else {
         if(isModOrOp) {
-        	std::cout << "BOT: Lost Op/Mod Status..." << endl;
+        	cout << "BOT: Lost Op/Mod Status..." << endl;
         }
         isModOrOp = false;
     }    
 }
 
-void TwitchCommandLimit::AddCommand(const std::string command) {
+void TwitchCommandLimit::AddCommand(const string command) {
     commands.push(command);
     Lib::writeToLog("PhantomBotLog.txt", "{C++} Added command '" + Lib::formatForPrint(command) + "'.");
-    std::cout << "BOT: Command '" << Lib::formatForPrint(command).c_str() << "' added to queue..." << endl;
+    cout << "BOT: Command '" << Lib::formatForPrint(command).c_str() << "' added to queue..." << endl;
 }
 
-void TwitchCommandLimit::PushCommand(const std::string command) {
+void TwitchCommandLimit::PushCommand(const string command) {
     Lib::writeToLog("PhantomBotLog.txt", "{C++} Attempting to push command '" + Lib::formatForPrint(command) + "'.");
-    std::cout << "BOT: Command '" << command.c_str() << "' added to queue under FORCE priority.. attempting to send now." << endl;
+    cout << "BOT: Command '" << command.c_str() << "' added to queue under FORCE priority.. attempting to send now." << endl;
     //Check if it's been 30s since our last "push"
     timeval cur;
     gettimeofday(&cur, 0); 
@@ -65,7 +65,7 @@ void TwitchCommandLimit::PushCommand(const std::string command) {
         if((isModOrOp && currentSendCount >= COMMAND_LIMIT_OPMOD-1)
            || (!isModOrOp && currentSendCount >= COMMAND_LIMIT_NORMAL-1)) {
             //We're currently over the command limit we're allocated..
-            std::cout << "BOT: Unable to force command '" <<  Lib::formatForPrint(command).c_str() << "', currently at command limit, command has been added to the normal queue and will be pushed once it can." << endl;
+            cout << "BOT: Unable to force command '" <<  Lib::formatForPrint(command).c_str() << "', currently at command limit, command has been added to the normal queue and will be pushed once it can." << endl;
             Lib::writeToLog("PhantomBotLog.txt", "{C++} 'Cannot push command '" + Lib::formatForPrint(command) + "', out of available message allocation limit.");
             AddCommand(command);
             return;
@@ -94,7 +94,7 @@ void TwitchCommandLimit::Update() {
 	}
     timeval cur;
     gettimeofday(&cur, 0);
-    std::string nextCmd;
+    string nextCmd;
     //Check the time
     if((cur.tv_sec - curTVal.tv_sec) >= 30) {
         //All good!
@@ -122,23 +122,23 @@ void TwitchCommandLimit::Update() {
     }
 }
 
-const std::string TwitchCommandLimit::Channel() const {
+const string TwitchCommandLimit::Channel() const {
 	return channel;
 }
 
-void TwitchCommandLimit::SendCommand(const std::string command) {
+void TwitchCommandLimit::SendCommand(const string command) {
 	if(!aSock) {
 		cout << "No socket object" << endl;
 		return;
 	}
-	std::cout << "BOT: Attempting to send command '" << Lib::formatForPrint(command).c_str() << "' to server." << endl;
+	cout << "BOT: Attempting to send command '" << Lib::formatForPrint(command).c_str() << "' to server." << endl;
     Lib::writeToLog("PhantomBotLog.txt", "{C++} Attempting to send command '" + Lib::formatForPrint(command) + "'.");
     if(!aSock->Send(command)) {
         Lib::writeToLog("PhantomBotLog.txt", "{C++} Command delivery failed.");
-    	std::cout << "BOT: Command '" << Lib::formatForPrint(command).c_str() << "' failed to send." << endl;        	
+    	cout << "BOT: Command '" << Lib::formatForPrint(command).c_str() << "' failed to send." << endl;        	
     }
     else {
-    	std::cout << "BOT: Command '" << Lib::formatForPrint(command).c_str() << "' successfully sent." << endl;
+    	cout << "BOT: Command '" << Lib::formatForPrint(command).c_str() << "' successfully sent." << endl;
     }
 }
 

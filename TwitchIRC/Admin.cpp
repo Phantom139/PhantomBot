@@ -14,8 +14,8 @@ Admin::~Admin() {
 
 }
 
-bool Admin::CheckAdminStatus(std::string username) {
-	for(int i = 0; i < adminList.size(); i++) {
+bool Admin::CheckAdminStatus(string username) {
+	for(S32 i = 0; i < adminList.size(); i++) {
 		if(username.compare(adminList[i]) == 0) {
 			return true;
 		}
@@ -25,8 +25,8 @@ bool Admin::CheckAdminStatus(std::string username) {
 
 void Admin::UpdateAdminList() {
     adminList.clear();
-	std::fstream f("adminusers.txt", std::ios::in);
-	char line[512];
+	fstream f("adminusers.txt", ios::in);
+	ACHAR line[512];
 	while(!f.eof()) {
 		f.getline(line, 512);
 		adminList.push_back(line);

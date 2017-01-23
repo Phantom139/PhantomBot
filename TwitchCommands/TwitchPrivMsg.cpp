@@ -6,8 +6,8 @@
 
 #include "TwitchCommandProcess.h"
 
-bool TwitchPrivMsg::Process(const std::string incoming) {
-    std::string name, message;
+bool TwitchPrivMsg::Process(const string incoming) {
+    string name, message;
     //Strip the username and their message
 	Lib::stripMessage(incoming, name, message);
     //Push to log / console

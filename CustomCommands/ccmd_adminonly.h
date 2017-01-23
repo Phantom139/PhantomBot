@@ -17,19 +17,19 @@ class Command_AdminOnly : public CustomCommand {
 		//Destructor
 		virtual ~Command_AdminOnly() { }
 		//Run the command
-		virtual void Fire(std::string input) {
-			std::string name, message;
+		virtual void Fire(string input) {
+			string name, message;
 			Lib::stripMessage(input, name, message);		
 			if(!Admin::fetchInstance().CheckAdminStatus(name)) {
 				return;
 			}
 			//Get the input after the command
-			size_t postCmd = message.find("!adminonly") + 10;
-			int v = atoi(message.substr(postCmd, message.length()).c_str());
+			SIZE_T postCmd = message.find("!adminonly") + 10;
+			S32 v = atoi(message.substr(postCmd, message.length()).c_str());
 			TwitchCommandLimit::fetchInstance().setAdminMode((bool)v);
 			//Post-process
-			std::string pFlg = TwitchCommandLimit::fetchInstance().AdminOnlyMode() ? "Enabled" : "Disabled";
-			std::string response = Lib::formatChatMessage("Admin-Only Command Mode " + pFlg + " by " + name + ".");
+			string pFlg = TwitchCommandLimit::fetchInstance().AdminOnlyMode() ? "Enabled" : "Disabled";
+			string response = Lib::formatChatMessage("Admin-Only Command Mode " + pFlg + " by " + name + ".");
 			TwitchCommandLimit::fetchInstance().AddCommand(response);			
 		}
 };

@@ -10,13 +10,14 @@
     TwitchIRC Class
 **/
 
-TwitchIRC::TwitchIRC(const string nick, const string usr, const string pass, const string addr, unsigned int port, const string channel) : _connectedChannel(channel), serverAddr(), serverPort(0), _socketObj(NULL), autoping_thread(NULL) {
+TwitchIRC::TwitchIRC(UFC32 nick, UFC32 usr, UFC32 pass, UFC32 addr, U32 port, UFC32 channel) :
+	_connectedChannel(channel), serverAddr(), serverPort(0), _socketObj(NULL), autoping_thread(NULL) {
     cout << "IRCClient: Establishing" << endl;
     Lib::writeToLog("PhantomBotLog.txt", "{C++} Establishing TwitchIRC Instance");
     //Create the socket
     _socketObj = Lib::createSocketAndConnect(addr, port);
     if(!_socketObj) {
-        cout << "Failed to establish connection to " << addr.c_str() << endl;
+        cout << "Failed to establish connection to " << addr << endl;
         Lib::writeToLog("PhantomBotLog.txt", "{C++} Failed to connect to " + addr + ".");
         return;
     }
@@ -124,7 +125,7 @@ void TwitchIRC::AutoPing() {
 	autoping_thread->join();
 }
 
-bool TwitchIRC::SendChatMessage(const string message) {
+bool TwitchIRC::SendChatMessage(UFC32 message) {
 	if(!SocketActive()) {
 		return false;
 	}
@@ -138,7 +139,7 @@ bool TwitchIRC::SendChatMessage(const string message) {
 bool TwitchIRC::fetchServerMessage(string &message) {
 	while(SocketActive()) {
 		string incoming;
-		int result = _socketObj->Recieve(incoming);
+		S32 result = _socketObj->Recieve(incoming);
 		if(result <= 0) {
 		    if(errno == 0) {
 		    	//Socket has been closed, re-establish

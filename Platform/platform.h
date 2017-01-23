@@ -67,5 +67,10 @@
 	typedef PlatformTypes::char_32 UTF32;
 	typedef PlatformTypes::SIZE_T SIZE_T;
 	typedef PlatformTypes::SIZE_T_S SIZE_T_S;
+	typedef PlatformTypes::s_long SL;
+	typedef PlatformTypes::u_long UL;
+	
+	//Additional Types
+	typedef const ACHAR *UFC32;
 
 #endif //PLATFORM_H

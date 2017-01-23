@@ -34,7 +34,7 @@ This is a very basic Twitch IRC bot with a very flexible and easy to navigate co
 ### Custom Chat Commands ###
 As mentioned in the prior section, this bot has a very easy to use custom chat command interface. To create a custom chat command, follow the below instructions.
 
-First and foremost, create a new C++ Header file, it would help you to follow the ccmd_x.h naming convention as not to differentiate from the other files in that directory. The bot uses a abstract class instance named CustomCommand, from which you will need to inherit. The class has a pure virtual function void Fire(std::string input) which must be overriden. At the most basic, here is a sample instance to use:
+First and foremost, create a new C++ Header file, it would help you to follow the ccmd_x.h naming convention as not to differentiate from the other files in that directory. The bot uses a abstract class instance named CustomCommand, from which you will need to inherit. The class has a pure virtual function void Fire(string input) which must be overriden. At the most basic, here is a sample instance to use:
 ```c++
 /**
     ccmd_mycommand.h
@@ -55,8 +55,8 @@ class Command_MyCommand : public CustomCommand {
 		//Destructor
 		virtual ~Command_MyCommand() { }
 		//Run the command
-		virtual void Fire(std::string input) {
-			std::string response = Lib::formatChatMessage("Hello World!!!");
+		virtual void Fire(string input) {
+			string response = Lib::formatChatMessage("Hello World!!!");
 			TwitchCommandLimit::fetchInstance().AddCommand(response);			
 		}
 };

@@ -18,43 +18,43 @@ namespace JSON {
 			virtual ~Stream() { }
 			
 			//Peek next charachter
-			virtual char peek() = 0;
+			virtual ACHAR peek() = 0;
 			//Obtain next charachter
-			virtual char get() = 0;
+			virtual ACHAR get() = 0;
 			//Move forward in queue
 			virtual void moveBack() = 0;
 			//Test next charachters in stream to see if they match the test variable
-			virtual bool nextCharsMatch(const char *test) = 0;
+			virtual bool nextCharsMatch(UFC32 test) = 0;
 			//Current line number
-			virtual int lNum() const = 0;
+			virtual S32 lNum() const = 0;
 			//Current charachter position
-			virtual int curPos() const = 0;
+			virtual S32 curPos() const = 0;
 	};
 	
 	//String information to JSON source
 	class StringStream : public Stream { 
 		public:
-			StringStream(const char *jsonIn, size_t bufferSize) :
+			StringStream(UFC32 jsonIn, SIZE_T bufferSize) :
 				strStart(jsonIn), strCPos(jsonIn), strEnd(jsonIn + bufferSize),
 				cLine(1), cPos(1) {
 				
 			}
 		
-			virtual char peek();			
-			virtual char get();
+			virtual ACHAR peek();			
+			virtual ACHAR get();
 			virtual void moveBack();
-			virtual bool nextCharsMatch(const char *test);
-			virtual int lNum() const;
-			virtual int curPos() const;
+			virtual bool nextCharsMatch(UFC32 test);
+			virtual S32 lNum() const;
+			virtual S32 curPos() const;
 		
 		private:
-			void updatePosition(char tChar);
+			void updatePosition(ACHAR tChar);
 		
-			const char *strStart;
-			const char *strCPos;
-			const char *strEnd;
-			int cLine;
-			int cPos;
+			UFC32 strStart;
+			UFC32 strCPos;
+			UFC32 strEnd;
+			S32 cLine;
+			S32 cPos;
 	};
 	
 	//Toolset which tokenizes individual string elements
@@ -63,14 +63,14 @@ namespace JSON {
 			Lexer(Stream &src) : srcStream(&src) { }
 			Token readNext();
 			
-			int lNum() const;
-			int curPos() const;
+			S32 lNum() const;
+			S32 curPos() const;
 		
 		private:
-			uint8_t readFromHex(char c);
-			Token readFromString(char c);
-			Token readFromNumber(char c);
-			bool charIsSign(char c);
+			U8 readFromHex(ACHAR c);
+			Token readFromString(ACHAR c);
+			Token readFromNumber(ACHAR c);
+			bool charIsSign(ACHAR c);
 			
 			Stream *srcStream;
 	};

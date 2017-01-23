@@ -19,25 +19,25 @@ Lib Class
 */
 namespace Lib {
     //Create a socket and connect to specified instance
-    Socket *createSocketAndConnect(const std::string addr, unsigned int port);
+    Socket *createSocketAndConnect(UFC32 addr, U32 port);
     //Fetch the current timestring
-    std::string currentTime();
+    string currentTime();
     //Fetch UTC time, unsigned integer
-    const unsigned long long fetchTime();
+    const U64 fetchTime();
     //Write a log line
-    void writeToLog(std::string logLocation, std::string message);
+    void writeToLog(string logLocation, string message);
     //Format an incoming command line to strip out /r/n for proper output
-    std::string formatForPrint(std::string incoming);
+    string formatForPrint(string incoming);
     //Format a chat message
-    std::string formatChatMessage(const std::string message);
+    string formatChatMessage(const string message);
     //Strip the contents of a message into username / message
-    void stripMessage(std::string incoming, std::string &username, std::string &message);
+    void stripMessage(string incoming, string &username, string &message);
     //Validate an expression
-    bool validateExpr(const std::string incoming, const std::string validTokens);
-    //Tokenize a std::string based on input parameters
-    void tokenizeString(const std::string incoming, const std::vector<char> tokens, std::queue<std::string> &out);
-    //Trim spaces from a std::string
-    std::string strTrim(const std::string &s);
+    bool validateExpr(const string incoming, const string validTokens);
+    //Tokenize a string based on input parameters
+    void tokenizeString(const string incoming, const vector<ACHAR> tokens, queue<string> &out);
+    //Trim spaces from a string
+    string strTrim(const string &s);
 };
 
 

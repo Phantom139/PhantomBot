@@ -7,16 +7,16 @@
 #ifndef _EXCEPTION_H_
 #define _EXCEPTION_H_
 
-class Exception : public std::exception {
+class Exception : public exception {
 	public:
-		Exception(const char *text) : std::exception(text) {
+		Exception(const char *text) : exception(text) {
 		
 		}
 		
 		virtual ~Exception() throw() { }
 		
 		virtual const char *what() const throw() {
-			return std::exception::what();
+			return exception::what();
 		}
 };
 

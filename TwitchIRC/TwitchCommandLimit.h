@@ -30,19 +30,19 @@ struct TwitchCommandLimit {
     //Constructor
     TwitchCommandLimit();
     //Init Instance
-    void Init(Socket *sO, std::string cName);
+    void Init(Socket *sO, string cName);
     //Process the USERSTATE message
-    void ProcessUserState(const std::string command);
+    void ProcessUserState(const string command);
     //Add a command to the process queue
-    void AddCommand(const std::string command);
+    void AddCommand(const string command);
     //Push a command through the pipe.
-    void PushCommand(const std::string command);
+    void PushCommand(const string command);
     //Update, called by TwitchIRC on it's update cycle
     void Update();
     //Return the name of the active channel
-    const std::string Channel() const;
+    const string Channel() const;
     //Wrapper to send with error check
-    void SendCommand(const std::string command);
+    void SendCommand(const string command);
     //Debug mode on?
     const bool DebugMode() const;
     //Admin Only mode?
@@ -57,13 +57,13 @@ struct TwitchCommandLimit {
     private:
         /* Members */
         //The name of the channel
-        std::string channel;
+        string channel;
         //The Queue of commands that will be processed
-        std::queue<std::string> commands;
+        queue<string> commands;
         //How many commands have we sent from the last 30s update?
-        int currentSendCount;
+        S32 currentSendCount;
         //How many forced commands have we sent in the last 30s update?
-        int forcedSendCount;
+        S32 forcedSendCount;
         //Do we have mod status?
         bool isModOrOp;
         //The timeval at the time of the currentSendCount initiation

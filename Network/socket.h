@@ -29,7 +29,7 @@ class Socket {
         //Create the socket
         bool Create();
         //Bind the socket to a port
-        bool Bind(const unsigned int port);
+        bool Bind(const U32 port);
         //Listen for incoming transmissions
         bool Listen() const;
         //Accept Requests
@@ -37,15 +37,15 @@ class Socket {
 
         /* Client */ 
         //Connect to a specified source
-        bool Connect(const std::string host, const unsigned int port);
+        bool Connect(UFC32 host, const unsigned int port);
 
         /* Default Functioning */
         //Close the socket
         bool Close();
         //Send information through the socket
-        bool Send(const std::string message) const;
+        bool Send(UFC32 message) const;
         //Recieve information from the socket
-        int Recieve(std::string &message) const;
+        int Recieve(string &message) const;
         //Set the socket's non blocking status
         void SetNonBlocking(const bool status = true);
         //Is the active socket valid?
@@ -54,11 +54,11 @@ class Socket {
     private:
         /* Private Class Members */
         //The stored socket instance
-        int _msock;  
+        S32 _msock;  
         //The Socket's address
         sockaddr_in _maddr;
         //Socket string buffer
-        char *socketBuffer;
+        ACHAR *socketBuffer;
 };
 
 

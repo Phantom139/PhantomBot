@@ -20,17 +20,17 @@ class TwitchCommand {
     public:    
         /* Public Class Methods */
         //Constructor
-        TwitchCommand(std::string n) : name(n) { }
+        TwitchCommand(string n) : name(n) { }
         //Destructor
         virtual ~TwitchCommand() { }
         
         //Process the command
-        virtual bool Process(const std::string incoming) = 0;
+        virtual bool Process(const string incoming) = 0;
         //Return the name of this command instance
-        virtual const std::string Name() { return name; };
+        virtual const string Name() { return name; };
         
 	protected:
-		std::string name;
+		string name;
 };
 
 /*
@@ -45,7 +45,7 @@ class TwitchPing : public TwitchCommand {
 		//Destructor
 		virtual ~TwitchPing() { }
 		//Process the command
-		virtual bool Process(const std::string incoming);
+		virtual bool Process(const string incoming);
         //Fetch singleton instance
     	static TwitchPing &fetchInstance();
 };
@@ -60,14 +60,14 @@ class TwitchPrivMsg : public TwitchCommand {
 		//Constructor
 		TwitchPrivMsg() : TwitchCommand("PrivMsg") { }
 		//Process the command
-		virtual bool Process(const std::string incoming);
+		virtual bool Process(const string incoming);
         //Fetch singleton instance
     	static TwitchPrivMsg &fetchInstance();          
         
 	private:
 		/* Private Class Methods */
 		//Format a chat message
-		std::string formatChatMessage(const std::string message);
+		string formatChatMessage(const string message);
 };    
 
 /*
@@ -80,7 +80,7 @@ class TwitchUserState : public TwitchCommand {
 		//Constructor
 		TwitchUserState() : TwitchCommand("UserState") { }
 		//Process the command
-		virtual bool Process(const std::string incoming);
+		virtual bool Process(const string incoming);
         //Fetch singleton instance
     	static TwitchUserState &fetchInstance();            
 };  

@@ -17,12 +17,12 @@ class Command_IsAdmin : public CustomCommand {
 		//Destructor
 		virtual ~Command_IsAdmin() { }
 		//Run the command
-		virtual void Fire(std::string input) {
-			std::string name, message;
+		virtual void Fire(string input) {
+			string name, message;
 			Lib::stripMessage(input, name, message);
 	
 			bool isAdmin = Admin::fetchInstance().CheckAdminStatus(name);
-			std::string response = Lib::formatChatMessage(name + (isAdmin ? " is" : " is not") + " flagged as an administrator.");
+			string response = Lib::formatChatMessage(name + (isAdmin ? " is" : " is not") + " flagged as an administrator.");
 			TwitchCommandLimit::fetchInstance().AddCommand(response);		
 		}
 };

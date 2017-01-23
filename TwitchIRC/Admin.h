@@ -22,7 +22,7 @@ class Admin {
 		//Destructor
 		~Admin();
 		//Check admin status
-		bool CheckAdminStatus(std::string username);
+		bool CheckAdminStatus(string username);
 		//Update the admin list
 		void UpdateAdminList(); 
 		//Fetch the admin singleton
@@ -31,7 +31,7 @@ class Admin {
 	private:
 		/* Private Class Members */
 		//Admin list
-		std::vector<std::string> adminList;
+		vector<string> adminList;
 };
 
 #endif //_TWITCHADMIN_H

@@ -23,7 +23,7 @@ class CustomCommand {
 		//Destructor
 		virtual ~CustomCommand() { }
 		//Run the command
-		virtual void Fire(std::string input) = 0;
+		virtual void Fire(string input) = 0;
 };
 
 /*
@@ -41,9 +41,9 @@ class CustomCommandManager {
 		//Destructor
 		~CustomCommandManager();
 		//Add a command to the IRC Bot
-		void AddCommand(std::string trigger, CustomCommand *cmd);
+		void AddCommand(string trigger, CustomCommand *cmd);
 		//Process the input message
-		void Process(std::string input);
+		void Process(string input);
 		//Fetch the singleton instance
 		static CustomCommandManager &fetchInstance();
 		
@@ -51,15 +51,15 @@ class CustomCommandManager {
 		/* Private Class Members */
 		//CCMD Structure: Double type-defs the command and trigger
 		struct CCMD {
-			CCMD(std::string t, CustomCommand *i) : trigger(t), instance(i) { }
+			CCMD(string t, CustomCommand *i) : trigger(t), instance(i) { }
 		
 			//The chat message that triggers the command
-			std::string trigger;
+			string trigger;
 			//The command itself
 			CustomCommand *instance;
 		};
 		//Vector instance of Commands
-		std::vector<CCMD> commandList;
+		vector<CCMD> commandList;
 };
 	
 #endif //_CUSTOMCOMMANDS_H

@@ -23,7 +23,7 @@ namespace JSON {
 		NUMERIC,
 		BOOLEAN,
 		TNULL,
-		EOF,
+		TEOF,
 		UNKNOWN
 	};
 	
@@ -42,7 +42,7 @@ namespace JSON {
 				n += text;
 				return *this;
 			}
-			Token& operator+=(char c) {
+			Token& operator+=(ACHAR c) {
 				n += c;
 				return *this;
 			}			
