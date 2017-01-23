@@ -83,11 +83,11 @@ bool Socket::Connect(const std::string host, const unsigned int port) {
     _maddr.sin_port = htons(port);
     memcpy(&_maddr.sin_addr, he->h_addr_list[0], he->h_length);
     //Are we allowed to create a connection?
-    cout << "Socket::Connect(): Attempting to establish connection to " << host.c_str() << ":" << port << " (" << he->h_addr_list[0] << ")" << endl;
+    //cout << "Socket::Connect(): Attempting to establish connection to " << host.c_str() << ":" << port << " (" << he->h_addr_list[0] << ")" << endl;
     //Yes, Connect...
     int status = ::connect(_msock, (sockaddr *)&_maddr, sizeof(_maddr));
     if(status == 0) {
-       cout << "Socket::Connect(): Connection Successful..." << endl;
+       //cout << "Socket::Connect(): Connection Successful..." << endl;
        return true;
     }
     std::cout << "Socket::Connect(): Failed to connect: " << status << ", errno " << errno << endl;
@@ -113,6 +113,8 @@ bool Socket::Send(const std::string message) const {
 int Socket::Recieve(std::string &message) const {
     message = "";
     memset(socketBuffer, 0, _MAXRECV+1);
+    int total = sizeof(socketBuffer) - 1;
+    int received = 0;
     //Try the recieve
     int rRet = ::recv(_msock, socketBuffer, _MAXRECV, 0);
     //cout << "DEBUG: (recv): msock: " << _msock << ", buffer: " << socketBuffer << ", returnCode: " << rRet << endl; 
