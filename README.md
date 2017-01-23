@@ -1,13 +1,19 @@
 # Phantom Bot Twitch IRC Project
-# CURRENT VERSION: Alpha 3
+# CURRENT VERSION: Alpha 4 (In Development)
 ## By Robert C. Fritzen (Phantom139)
-## Written & Compiled on Ubuntu 16.04 LTS
+## Written & Compiled on Ubuntu 16.04 LTS / Windows 10
 
 ### Prerequisites ###
-No Libraries Required!!! This project uses all native Linux code. You'll just need the 'cmake' package to build it!
+No Libraries Required!!! This project uses all native C++11 code. 
 
-### Setup Instructions ###
+To Compile on Linux: You'll just need the 'cmake' package to build it!
+To Compile on Windows 10: You'll need either cmake or MSVS 2015.
+
+### Setup Instructions (Linux) ###
 Drop the files into a directory and open a terminal. cd to the directory and run the command 'cmake . && make' to compile, then run the code with ./PhantomBot
+
+### Setup Instructions (Windows) ###
+Drop the files into a directory. Open Visual Studio and add all of the files to a project to compile. Run the compiled executable.
 
 ### Configuration Files ###
 There are two bot config files you can use.
@@ -34,7 +40,6 @@ First and foremost, create a new C++ Header file, it would help you to follow th
     ccmd_mycommand.h
     PhantomBot Project
     By: Robert F. (Phantom139)
-    Built on Ubuntu 16.04 LTS
 **/
 
 #ifndef _CCMD_MYCOMMAND_H
