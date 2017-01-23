@@ -20,6 +20,8 @@
 			typedef __SIZE_TYPE__ SIZE_T;
 		};
 
+		#define USE_SYS_TIME 1
+
 	#endif //PLATFORM_LINUX_H
 
 #endif //PHANTOMBOT_LINUX

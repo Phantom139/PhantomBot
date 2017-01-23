@@ -29,7 +29,11 @@
 	cross-platform functionality.
 	*/
 
-	//Step 1: Detect Platform
+	//Step 1: Load Default (Generic) Platform Classes, These contain methods
+	// that can be overriden by platform specific functioning
+	#include "platformTime.h"
+
+	//Step 2: Detect Platform
 	/* Simple means to detect the platform */
 	#if defined(_WIN64) || defined(_WIN32)
 		#define PHANTOMBOT_WINDOWS 1
@@ -39,18 +43,18 @@
 		#error "Undefined or unsupported platform instance, please see platform.h to add in capabilities for your platform."
 	#endif
 
-	//Step 2: Load Platform Specific Info
+	//Step 3: Load Platform Specific Info and override generic classes with platform specific wrappers
 	#if defined(PHANTOMBOT_WINDOWS)
-		#include "platformWindows.h"
-		#include "loadWindows.h"
+		#include "Windows/platformWindows.h"
+		#include "Windows/loadWindows.h"
 	#elif defined(PHANTOMBOT_LINUX)
-		#include "platformLinux.h"
-		#include "loadLinux.h"
+		#include "Linux/platformLinux.h"
+		#include "Linux/loadLinux.h"
 	#else
 		#error "How did you get here?"
 	#endif
 
-	//Step 3: Override Generic Platform Info
+	//Step 4: Define wrapper pointer classes and typedefs such that the rest of the project may use
 	typedef PlatformTypes::s_int_8 S8;
 	typedef PlatformTypes::s_int_16 S16;
 	typedef PlatformTypes::s_int_32 S32;

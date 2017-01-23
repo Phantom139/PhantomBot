@@ -21,6 +21,8 @@
 			#endif
 		};
 
+		#define USE_SYS_TIME 0
+
 	#endif //PLATFORM_WINDOWS_H
 
 #endif //PHANTOMBOT_WINDOWS
