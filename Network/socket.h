@@ -9,9 +9,7 @@
 
 #include "../include.h"
 
-#define _MAXHOSTNAME 200
-#define _MAXCONNECTIONS 5
-#define _MAXRECV 1024
+
 
 /*
 Socket Class
@@ -37,7 +35,7 @@ class Socket {
 
         /* Client */ 
         //Connect to a specified source
-        bool Connect(UFC32 host, const unsigned int port);
+        bool Connect(UFC32 host, const U32 port);
 
         /* Default Functioning */
         //Close the socket
