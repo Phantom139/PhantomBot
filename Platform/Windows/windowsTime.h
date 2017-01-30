@@ -13,6 +13,7 @@
 			public:
 				static void sysTime(TimeVars &c);
 				static void utcTime(TimeVars &c);
+				static time_t makeGMTime(TimeVars &c);
 		};
 
 	#endif //WINDOWS_TIME_H

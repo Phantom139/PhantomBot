@@ -39,6 +39,21 @@ struct TimeVars {
 		return 0;
 	}
 
+	U64 toValue() {
+		//Converts the current time to a single value which can be used for timer operations.
+		U64 result;
+		result += miliseconds * 1000;
+
+		c.years = local.tm_year + 1900;
+		c.months = local.tm_mon + 1;
+		c.dayOfWeek = local.tm_wday;
+		c.dayNum = local.tm_mday;
+		c.hours = local.tm_hour;
+		c.minutes = local.tm_min;
+		c.seconds = local.tm_sec;
+		c.miliseconds = tv.tv_usec / 1000;
+	}
+
 	bool operator==(const TimeVars &t) {
 		return !!(compare(t) == 0);
 	}
@@ -78,6 +93,8 @@ class GTime {
 		static UFC32 fetchTimestamp();
 		static void fetchSysTime(ACHAR *dst);
 		static void fetchDateString(ACHAR *dst);
+
+		static time_t makeGMTime(TimeVars &c);
 
 		/* If we have access to <sys/time.h>, define the time overlay */
 		#if USE_SYS_TIME == 1

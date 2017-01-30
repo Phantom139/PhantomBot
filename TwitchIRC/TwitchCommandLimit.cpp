@@ -56,8 +56,7 @@ void TwitchCommandLimit::PushCommand(const string command) {
     //Check if it's been 30s since our last "push"
     TimeVars cur;
     Time::utcTime(cur); 
-	//TODO: UPDATE!!! NEED UTC STRING (IE: BIG #)
-    if((cur.seconds - curFVal.seconds) >= 30) {
+	if((Time::makeGMTime(cur) - Time::makeGMTime(curFVal)) >= 30) {
         forcedSendCount = 0;
     }
     //If it hasn't been 30s, we need to verify that we have "allocation" available to force a mesage through
@@ -97,7 +96,7 @@ void TwitchCommandLimit::Update() {
 	Time::utcTime(cur);
     string nextCmd;
     //Check the time
-    if((cur.seconds - curTVal.seconds) >= 30) {
+	if ((Time::makeGMTime(cur) - Time::makeGMTime(curFVal)) >= 30) {
         //All good!
         currentSendCount = 0;
     }
