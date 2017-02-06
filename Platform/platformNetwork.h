@@ -20,6 +20,7 @@ class GeneralSocket {
 			Connected,
 			ConnectionFailed,
 			NoError,
+			RecieveError,
 			InvalidSocket,
 			Unknown
 		};
@@ -28,17 +29,24 @@ class GeneralSocket {
 		GeneralSocket();
 		virtual ~GeneralSocket();
 
+		//General Methods
 		virtual bool create() = 0;
 		virtual bool bind(const U32 port) = 0;
 		virtual bool listen() const = 0;
 		virtual bool accept(GeneralSocket &s) = 0;
 		virtual SocketReturnCode connect(UFC32 host, const U32 port) = 0;
 		virtual bool close() = 0;
+		virtual bool shutdown() = 0;
 		virtual bool send(UFC32 message) const = 0;
 		virtual SocketReturnCode receive(U8 *buffer, S32 bufferSize, S32 *bytesRead) const = 0;
 		virtual void setNonBlocking(const bool status = true) = 0;
 		virtual bool isValidSocket() const = 0;
 
+		//Callbacks
+		virtual void onConnected();
+		virtual void onConnectFailed();
+		virtual void onSelfDisconnect();
+		virtual void onServerDisconect();
 };
 
 #endif //PLATFORM_NETWORK_H
