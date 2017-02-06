@@ -15,7 +15,7 @@
 #include <stdarg.h>
 #include <math.h>
 #include <float.h>
-#include <string.h>
+#include <string>
 #include <algorithm>
 #include <iostream>
 #include <vector>

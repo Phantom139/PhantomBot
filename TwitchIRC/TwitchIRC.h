@@ -44,6 +44,8 @@ class TwitchIRC {
          /* IRC Commands, Handled by the TwitchCommandLimit class */
          //Send a chat message
          bool SendChatMessage(UFC32 message);
+		 //Process a console command
+		 bool ProcessConsoleCommand(UFC32 input);
 
      private:
          /* Private Class Methods */
@@ -61,6 +63,8 @@ class TwitchIRC {
          string _connectedChannel;
          //Socket object
          Socket *_socketObj;
+		 //Incoming Data Buffer
+		 incomingData<U8> incomingBuffer;
 };
 
 #endif //_TWITCHIRC_H

@@ -65,7 +65,7 @@ bool Socket::accept(Socket &s) {
 	return true;
 }
 
-GeneralSocket::SocketReturnCode Socket::connect(UFC32 host, const U32 port) {
+SocketCode Socket::connect(UFC32 host, const U32 port) {
 	if (!isValidSocket()) {
 		return InvalidSocket;
 	}
@@ -122,7 +122,7 @@ bool Socket::send(UFC32 message) const {
 	return true;
 }
 
-GeneralSocket::SocketReturnCode Socket::receive(U8 *buffer, S32 bufferSize, S32 *bytesRead) const {
+SocketCode Socket::receive(U8 *buffer, S32 bufferSize, S32 *bytesRead) const {
 	*bytesRead = ::recv(sObj, (ACHAR *)buffer, bufferSize, 0);
 	switch (*bytesRead) {
 	case -1:

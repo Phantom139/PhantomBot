@@ -18,11 +18,11 @@
 				virtual bool bind(const U32 port);
 				virtual bool listen() const;
 				virtual bool accept(Socket &s);
-				virtual SocketReturnCode connect(UFC32 host, const U32 port);
+				virtual SocketCode connect(UFC32 host, const U32 port);
 				virtual bool close();
 				virtual bool shutdown();
 				virtual bool send(UFC32 message) const;
-				virtual SocketReturnCode receive(U8 *buffer, S32 bufferSize, S32 *bytesRead) const;
+				virtual SocketCode receive(U8 *buffer, S32 bufferSize, S32 *bytesRead) const;
 				virtual void setNonBlocking(const bool status = true);
 				virtual bool isValidSocket() const;
 

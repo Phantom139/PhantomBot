@@ -4,8 +4,68 @@
     By: Robert F. (Phantom139)
 **/
 
-#include "Lib/lib.h"
-#include "TwitchIRC/TwitchIRC.h"
+#include "PhantomBot.h"
+
+
+/*
+ PhantomBot Class
+*/
+PhantomBot::PhantomBot() : irc(NULL) {
+	initialized = false;
+	wantsQuit = false;
+}
+
+PhantomBot::~PhantomBot() {
+
+}
+
+PhantomBot &PhantomBot::fetchInstance() {
+	if (managedSingleton<PhantomBot>::instance() == NULL) {
+		managedSingleton<PhantomBot>::createInstance();
+	}
+	return *(managedSingleton<PhantomBot>::instance());
+}
+
+
+void PhantomBot::init(vector<string> &conf) {
+	if (initialized) {
+		return;
+	}
+	//Initialize IRC Module and Input Module
+	irc = new TwitchIRC(conf[0].c_str(), conf[0].c_str(), conf[4].c_str(), conf[1].c_str(), (U32)atoi(conf[2].c_str()), conf[3].c_str());
+	ircThread = new thread(&PhantomBot::ircTick, this);
+	inputThread = new thread(&PhantomBot::inputTick, this);
+	initialized = true;
+}
+
+void PhantomBot::ircTick() {
+	while (irc->SocketActive()) {
+		irc->Update();
+	}
+	ircThread->join();
+}
+
+void PhantomBot::inputTick() {
+	while (!wantsQuit) {
+		//Run Code...
+		cout << "[PhantomBot]: ";
+		getline(cin, input);
+		if (!irc->ProcessConsoleCommand(input.c_str())) {
+			wantsQuit = true;
+		}
+		input = "";
+	}
+	//Signal Socket to end.
+	irc->CloseSocket();
+	inputThread->join();
+}
+
+/*
+
+ MAIN METHOD
+ ENTRY POINT
+
+*/
 
 int main(void) {
 	srand((U32)time(NULL));
@@ -20,10 +80,7 @@ int main(void) {
 	}
 	//Set stuff up...
 	if(config.size() >= 5) {
-		TwitchIRC irc(config[0], config[0], config[4], config[1], (U32)atoi(config[2].c_str()), config[3]);
-		while(irc.SocketActive()) {
-			irc.Update();
-		}
+		PhantomBot::fetchInstance().init(config);
 	}
 	else {
 		cout << "There was an error in your 'botconfig.txt' file, contact Phantom139 for support" << endl;

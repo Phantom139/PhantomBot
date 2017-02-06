@@ -18,7 +18,7 @@ TwitchIRC::TwitchIRC(UFC32 nick, UFC32 usr, UFC32 pass, UFC32 addr, U32 port, UF
     _socketObj = Lib::createSocketAndConnect(addr, port);
     if(!_socketObj) {
         cout << "Failed to establish connection to " << addr << endl;
-        Lib::writeToLog("PhantomBotLog.txt", "{C++} Failed to connect to " + addr + ".");
+        Lib::writeToLog("PhantomBotLog.txt", "{C++} Failed to connect to " + string(addr)+ ".");
         return;
     }
     serverAddr = addr;
@@ -31,9 +31,9 @@ TwitchIRC::TwitchIRC(UFC32 nick, UFC32 usr, UFC32 pass, UFC32 addr, U32 port, UF
     //Construct the login token
     cout << "IRCClient: Establishing login token" << endl;
     Lib::writeToLog("PhantomBotLog.txt", "{C++} Establishing TwitchIRC Login Token");
-    const string pS = string("PASS " + pass + "\r\n");
-    const string nS = string("NICK " + nick + "\r\n");
-    const string uS = string("USER " + usr + "\r\n");
+    const string pS = string("PASS " + string(pass) + "\r\n");
+    const string nS = string("NICK " + string(nick) + "\r\n");
+    const string uS = string("USER " + string(usr) + "\r\n");
     //Password must be sent first, then our information
     if(pS.size()) {
         TwitchCommandLimit::fetchInstance().PushCommand(pS);
@@ -57,9 +57,9 @@ TwitchIRC::TwitchIRC(UFC32 nick, UFC32 usr, UFC32 pass, UFC32 addr, U32 port, UF
         TwitchCommandLimit::fetchInstance().PushCommand(aCS1);
         TwitchCommandLimit::fetchInstance().PushCommand(aCS2);
         TwitchCommandLimit::fetchInstance().PushCommand(aCS3);
-        Lib::writeToLog("PhantomBotLog.txt", "{Twitch} Connected to TwitchIRC, connecting to channel '#" + channel + "'.");
+        Lib::writeToLog("PhantomBotLog.txt", "{Twitch} Connected to TwitchIRC, connecting to channel '#" + string(channel) + "'.");
         //And finally... connect to the channel
-        const string cS = string("JOIN " + channel + "\r\n");
+        const string cS = string("JOIN " + string(channel) + "\r\n");
         TwitchCommandLimit::fetchInstance().PushCommand(cS);
         //Send a intro message to init stuff...
         SendChatMessage("PhantomBot Now Connected to channel...");
@@ -103,13 +103,13 @@ void TwitchIRC::Update() {
 
 void TwitchIRC::CloseSocket() {
 	if(_socketObj) {
-        _socketObj->Close();
+        _socketObj->close();
     }   	
 }
 
 bool TwitchIRC::SocketActive() {
 	if(_socketObj) {
-		return _socketObj->IsValid();
+		return _socketObj->isValidSocket();
 	}
 	return false;
 }
@@ -134,39 +134,44 @@ bool TwitchIRC::SendChatMessage(UFC32 message) {
 	const string format = "PRIVMSG " + _connectedChannel + " :" + message + "\r\n";
 	//Add it to the queue
 	TwitchCommandLimit::fetchInstance().AddCommand(format);
+	return true;
+}
+
+bool TwitchIRC::ProcessConsoleCommand(UFC32 input) {
+	//Big Time To-Do Here :P
+	return true;
 }
 
 bool TwitchIRC::fetchServerMessage(string &message) {
-	while(SocketActive()) {
-		string incoming;
-		S32 result = _socketObj->Recieve(incoming);
-		if(result <= 0) {
-		    if(errno == 0) {
-		    	//Socket has been closed, re-establish
-		    	cout << "Server has closed socket connection, attempting to re-establish" << endl;
-				_socketObj = Lib::createSocketAndConnect(serverAddr.c_str(), serverPort);
-				if(!_socketObj) {
-					cout << "Failed to establish connection to " << serverAddr.c_str() << endl;
-					Lib::writeToLog("PhantomBotLog.txt", "{C++} Failed to connect to " + serverAddr + ".");
+	while (SocketActive()) {
+		//Get some data...
+		S32 bytesRead;
+		incomingBuffer.alloc(_MAXRECV);
+		SocketCode rc = _socketObj->receive((U8*)incomingBuffer.data, _MAXRECV, &bytesRead);
+		if (rc == SocketCode::Disconnected) {
+			cout << "Server has closed socket connection, abort..." << endl;
+			return false;
+		}
+		else if (rc == SocketCode::RecieveError) {
+			//Socket classes are programmed to automatically push the error, no need to repeat here.
+			return false;
+		}
+		else if(rc == SocketCode::NoError) {
+			if (bytesRead > 0) {
+				//Got some Data
+				incomingBuffer.size = bytesRead;
+				message += (UFC32)incomingBuffer.data;
+			}
+			else {
+				if (bytesRead < 0) {
+					//What have you done????
+					cout << "You have caused some kind of voo-doo magic (" << errno << ") to occur, please stop..." << endl;
+					message = "";
 					return false;
-				}	
-				cout << "Reconnection Completed..." << endl;
-				return fetchServerMessage(message);	    	
-		    }
-		    else {
-		    	cout << "An error occurred when recieving a server message, errno: " << errno << endl;
-		    	return false;
-		    }
-		}
-		//check for /r/n
-		message += incoming;
-		if(message.size() > 1 && message[message.size() - 2] == '\r' && message[message.size() - 1] == '\n') {
-			return true;
-		}
-		//Too big...
-		if(message.size() > LIMIT_16) {
-			cout << "Endless buffer error, closing socket" << endl;
-			CloseSocket();
+				}
+				//End of the buffer!
+				return true;
+			}
 		}
 	}
 	return false;
