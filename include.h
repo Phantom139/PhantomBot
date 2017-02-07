@@ -4,8 +4,6 @@
     By: Robert F. (Phantom139)
 **/
 
-#include "Platform/platform.h"
-
 //Platform Independant Headers
 #include <new>
 #include <wchar.h>
@@ -27,7 +25,8 @@
 #include <thread>
 #include <chrono>
 
-//Files needed by ALL other files
+#include "Platform/platform.h"
+
 #include "Lib/exception.h"
 #include "Lib/mSingleton.h"
 

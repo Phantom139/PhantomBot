@@ -4,7 +4,7 @@
 	By: Robert F. (Phantom139)
 **/
 
-#include "Lib/lib.h"
+#include "include.h"
 #include "TwitchIRC/TwitchIRC.h"
 
 #ifndef PHANTOM_BOT_H

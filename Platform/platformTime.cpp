@@ -1,10 +1,10 @@
 /**
-	platformTime.h
+	platformTime.cpp
 	PhantomBot Project
 	By: Robert F. (Phantom139)
 **/
 
-#include "platformTime.h"
+#include "../include.h"
 
 UFC32 GTime::fetchTimestamp() {
 	static ACHAR timestamp[1024];

@@ -10,11 +10,11 @@ namespace Lib {
 
 	Socket *createSocketAndConnect(UFC32 addr, U32 port) {
 		Socket *s = new Socket();
-		if(!s->Create()) {
+		if(!s->create()) {
 		    cout << "Lib::createSocketAndConnect(): Creation Failed" << endl;
 		    return NULL;
 		}
-		if(!s->Connect(addr, port)) {
+		if(!s->connect(addr, port)) {
 		    cout << "Lib::createSocketAndConnect(): Connection Failed" << endl;
 		    return NULL;        
 		}
@@ -81,7 +81,7 @@ namespace Lib {
 		UFC32 str = incoming.c_str();
 		do {
 			UFC32 begin = str;
-			for(int i = 0; i < tokens.size(); i++) {
+			for(SIZE_T i = 0; i < tokens.size(); i++) {
 				while(*str != tokens[i] && *str) {
 				    str++;
 				}

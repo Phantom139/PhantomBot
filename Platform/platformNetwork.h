@@ -7,8 +7,6 @@
 #ifndef PLATFORM_NETWORK_H
 #define PLATFORM_NETWORK_H
 
-#include "../include.h"
-
 #ifndef _MAXHOSTNAME
 #define _MAXHOSTNAME 200
 #endif
@@ -69,14 +67,14 @@ class GeneralSocket {
 			Unknown
 		};
 
-		GeneralSocket();
-		virtual ~GeneralSocket();
+		GeneralSocket() { }
+		virtual ~GeneralSocket() { }
 
 		//General Methods
 		virtual bool create() = 0;
 		virtual bool bind(const U32 port) = 0;
 		virtual bool listen() const = 0;
-		virtual bool accept(GeneralSocket &s) = 0;
+		virtual bool accept(GeneralSocket &s) { return false; }
 		virtual SocketReturnCode connect(UFC32 host, const U32 port) = 0;
 		virtual bool close() = 0;
 		virtual bool shutdown() = 0;
@@ -86,10 +84,10 @@ class GeneralSocket {
 		virtual bool isValidSocket() const = 0;
 
 		//Callbacks
-		virtual void onConnected();
-		virtual void onConnectFailed();
-		virtual void onSelfDisconnect();
-		virtual void onServerDisconect();
+		virtual void onConnected() { }
+		virtual void onConnectFailed() { }
+		virtual void onSelfDisconnect() { }
+		virtual void onServerDisconect() { }
 };
 
 //Easy Access Typedef

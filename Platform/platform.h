@@ -29,37 +29,19 @@
 	cross-platform functionality.
 	*/
 
-	//Step 1: Load Default (Generic) Platform Classes, These contain methods
-	// that can be overriden by platform specific functioning
-	#include "platformTime.h"
-	#include "platformNetwork.h"
-
-	//Step 2: Detect Platform
+	//Step 1: Detect Platform
 	/* Simple means to detect the platform */
 	#if defined(_WIN64) || defined(_WIN32)
 		#define PHANTOMBOT_WINDOWS 1
+		#include "Windows/platformWindows.h"
 	#elif defined(__linux) || defined(__unix)
 		#define PHANTOMBOT_LINUX 1
+		#include "Linux/platformLinux.h"
 	#else
 		#error "Undefined or unsupported platform instance, please see platform.h to add in capabilities for your platform."
 	#endif
 
-	//Step 3: Load Platform Specific Info and override generic classes with platform specific wrappers
-	#if defined(PHANTOMBOT_WINDOWS)
-		#include "Windows/platformWindows.h"
-		#include "Windows/loadWindows.h"
-		#include "Windows/windowsTime.h"
-		#include "Windows/windowsSocket.h"
-	#elif defined(PHANTOMBOT_LINUX)
-		#include "Linux/platformLinux.h"
-		#include "Linux/loadLinux.h"
-		#include "Linux/linuxTime.h"
-		#include "Linux/linuxSocket.h"
-	#else
-		#error "How did you get here?"
-	#endif
-
-	//Step 4: Define wrapper pointer classes and typedefs such that the rest of the project may use
+	//Step 2: Define wrapper pointer classes and typedefs such that the rest of the project may use
 	typedef PlatformTypes::s_int_8 S8;
 	typedef PlatformTypes::s_int_16 S16;
 	typedef PlatformTypes::s_int_32 S32;
@@ -78,8 +60,24 @@
 	typedef PlatformTypes::SIZE_T_S SIZE_T_S;
 	typedef PlatformTypes::s_long SL;
 	typedef PlatformTypes::u_long UL;
-	
 	//Additional Types
 	typedef const ACHAR *UFC32;
+
+	//Step 3: Load Generic Platform Classes (Pure Virtuals)
+	#include "platformTime.h"
+	#include "platformNetwork.h"
+
+	//Step 4: Load Platform Specific Info and override generic classes with platform specific wrappers
+	#if defined(PHANTOMBOT_WINDOWS)		
+		#include "Windows/loadWindows.h"
+		#include "Windows/windowsTime.h"
+		#include "Windows/windowsSocket.h"
+	#elif defined(PHANTOMBOT_LINUX)	
+		#include "Linux/loadLinux.h"
+		#include "Linux/linuxTime.h"
+		#include "Linux/linuxSocket.h"
+	#else
+		#error "How did you get here?"
+	#endif
 
 #endif //PLATFORM_H

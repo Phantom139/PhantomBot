@@ -7,12 +7,20 @@
 #ifndef PLATFORM_TIME_H
 #define PLATFORM_TIME_H
 
-#include "../include.h"
 #if USE_SYS_TIME == 1
 	#include <sys/time.h>
 #endif
 
 struct TimeVars {
+
+	S32 years;
+	S32 months;
+	S32 dayOfWeek;
+	S32 dayNum;
+	S32 hours;
+	S32 minutes;
+	S32 seconds;
+	S32 miliseconds;
 
 	TimeVars() : years(0), months(0), dayOfWeek(0), dayNum(0), hours(0), minutes(0), seconds(0), miliseconds(0) { }
 
@@ -63,14 +71,6 @@ struct TimeVars {
 		return compare(t) <= 0;
 	}
 
-	S32 years;
-	S32 months;
-	S32 dayOfWeek;
-	S32 dayNum;
-	S32 hours;
-	S32 minutes;
-	S32 seconds;
-	S32 miliseconds;
 };
 
 class GTime {

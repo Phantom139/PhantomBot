@@ -4,3 +4,10 @@ PhantomBot.sln
 PhantomBot.VC.VC.opendb
 *.vcxproj
 PhantomBot.vcxproj.filters
+*.exe
+*.pdb
+*.obj
+*.tlog
+*.log
+*.iobj
+Release/PhantomBot.ipdb
