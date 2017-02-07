@@ -7,7 +7,6 @@
 #ifndef _TWITCHIRC_H
 #define _TWITCHIRC_H
 
-#include "../include.h"
 #include "../Lib/lib.h"
 #include "TwitchCommandLimit.h"
 #include "Admin.h"

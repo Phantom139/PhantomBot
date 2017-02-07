@@ -133,7 +133,7 @@ void TwitchCommandLimit::SendCommand(const string command) {
 	}
 	cout << "BOT: Attempting to send command '" << Lib::formatForPrint(command).c_str() << "' to server." << endl;
     Lib::writeToLog("PhantomBotLog.txt", "{C++} Attempting to send command '" + Lib::formatForPrint(command) + "'.");
-    if(!aSock->Send(command.c_str())) {
+    if(!aSock->send(command.c_str())) {
         Lib::writeToLog("PhantomBotLog.txt", "{C++} Command delivery failed.");
     	cout << "BOT: Command '" << Lib::formatForPrint(command).c_str() << "' failed to send." << endl;        	
     }

@@ -26,7 +26,7 @@ class Command_AdminOnly : public CustomCommand {
 			//Get the input after the command
 			SIZE_T postCmd = message.find("!adminonly") + 10;
 			S32 v = atoi(message.substr(postCmd, message.length()).c_str());
-			TwitchCommandLimit::fetchInstance().setAdminMode((bool)v);
+			TwitchCommandLimit::fetchInstance().setAdminMode(v <= 0 ? false : true);
 			//Post-process
 			string pFlg = TwitchCommandLimit::fetchInstance().AdminOnlyMode() ? "Enabled" : "Disabled";
 			string response = Lib::formatChatMessage("Admin-Only Command Mode " + pFlg + " by " + name + ".");

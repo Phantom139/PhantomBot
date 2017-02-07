@@ -15,7 +15,7 @@ Admin::~Admin() {
 }
 
 bool Admin::CheckAdminStatus(string username) {
-	for(S32 i = 0; i < adminList.size(); i++) {
+	for(SIZE_T i = 0; i < adminList.size(); i++) {
 		if(username.compare(adminList[i]) == 0) {
 			return true;
 		}

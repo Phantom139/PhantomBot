@@ -4,10 +4,9 @@
     By: Robert F. (Phantom139)
 **/
 
+/*
 #ifndef _HTTPREQUEST_H
 #define _HTTPREQUEST_H
-
-#include "socket.h"
 
 #define _HTTP_PORT 80
 #define _SEND_BUFFER_SIZE 1024
@@ -41,3 +40,5 @@ class HTTPRequest {
 };
 
 #endif //_HTTPREQUEST_H
+
+*/

@@ -8,7 +8,6 @@
 #define _LIB_H
 
 #include "../include.h"
-#include "../Network/socket.h"
 #include "../TwitchIRC/TwitchCommandLimit.h"
 
 #define LIMIT_16 ((signed short)0x7FFF)

@@ -4,6 +4,7 @@
     By: Robert F. (Phantom139)
 **/
 
+/*
 #include "httpRequest.h"
 
 HTTPRequest::HTTPRequest() {
@@ -76,3 +77,4 @@ bool HTTPRequest::sendGETRequest(string url, string remainingAddr) {
 	revd = true;
 	return true;
 }
+*/

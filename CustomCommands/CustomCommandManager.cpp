@@ -23,7 +23,7 @@ void CustomCommandManager::Process(string input) {
     //Split the message to find the trigger
     string username, message;
     Lib::stripMessage(input, username, message);
-	for(S32 i = 0; i < commandList.size(); i++) {
+	for(SIZE_T i = 0; i < commandList.size(); i++) {
 		if(commandList[i].trigger.compare(message.substr(0, commandList[i].trigger.length())) == 0) {
 			commandList[i].instance->Fire(input);
 		}
