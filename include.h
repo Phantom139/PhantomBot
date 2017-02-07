@@ -22,6 +22,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <fstream>
+#include <atomic>
 #include <thread>
 #include <chrono>
 
