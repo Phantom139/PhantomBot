@@ -9,15 +9,18 @@
 
 class Exception : public std::exception {
 	public:
-		Exception(const char *text) : exception(text) {
+		Exception(const char *text) : type(text) {
 		
 		}
 		
 		virtual ~Exception() throw() { }
 		
 		virtual const char *what() const throw() {
-			return exception::what();
+			return type;
 		}
+		
+	private:
+		const char *type;
 };
 
-#endif _EXCEPTION_H_
+#endif //_EXCEPTION_H_
