@@ -14,6 +14,8 @@ TwitchIRC::TwitchIRC(UFC32 nick, UFC32 usr, UFC32 pass, UFC32 addr, U32 port, UF
 	_connectedChannel(channel), serverAddr(), serverPort(0), _socketObj(NULL), autoping_thread(NULL) {
     cout << "IRCClient: Establishing" << endl;
     Lib::writeToLog("PhantomBotLog.txt", "{C++} Establishing TwitchIRC Instance");
+    //Create the buffer
+    buffer = (U8*)malloc(_MAXRECV);
     //Create the socket
     _socketObj = Lib::createSocketAndConnect(addr, port);
     if(!_socketObj) {
@@ -41,8 +43,7 @@ TwitchIRC::TwitchIRC(UFC32 nick, UFC32 usr, UFC32 pass, UFC32 addr, U32 port, UF
     TwitchCommandLimit::fetchInstance().SendCommand(nS);
     TwitchCommandLimit::fetchInstance().SendCommand(uS);
     //Wait for the welcome reply...
-    string response;
-    fetchServerMessage(response);
+    fetchServerMessage();
     if(response.find("Welcome") == string::npos) {
         //We failed...
         cout << "BOT: Failed to connect to TwitchIRC" << endl << endl << response.c_str() << endl << endl;
@@ -76,8 +77,7 @@ TwitchIRC::~TwitchIRC() {
 }
 
 void TwitchIRC::Update() {
-    string response;
-    fetchServerMessage(response);
+    fetchServerMessage();
     //cout << "Server: " << response << endl;
     if(response.size()) {
         //Process messages based on the content
@@ -95,8 +95,8 @@ void TwitchIRC::Update() {
         	TwitchUserState::fetchInstance().Process(response);         	
         }    
         else {
-        	cout << "Got unknown response: " << Lib::formatForPrint(response).c_str() << endl;
-        	Lib::writeToLog("PhantomBotLog.txt", "{Twitch} UIID Response '" + Lib::formatForPrint(response) + "'.");
+        	cout << "Got unknown response: " << response << endl;
+        	Lib::writeToLog("PhantomBotLog.txt", "{Twitch} UIID Response '" + response + "'.");
         }
     }
 }
@@ -142,12 +142,12 @@ bool TwitchIRC::ProcessConsoleCommand(UFC32 input) {
 	return true;
 }
 
-bool TwitchIRC::fetchServerMessage(string &message) {
+bool TwitchIRC::fetchServerMessage() {
+    response = "";
 	while (SocketActive()) {
 		//Get some data...
 		S32 bytesRead;
-		incomingBuffer.alloc(_MAXRECV);
-		SocketCode rc = _socketObj->receive((U8*)incomingBuffer.data, _MAXRECV, &bytesRead);
+		SocketCode rc = _socketObj->receive(buffer, _MAXRECV, &bytesRead);
 		if (rc == SocketCode::Disconnected) {
 			cout << "Server has closed socket connection, abort..." << endl;
 			return false;
@@ -158,16 +158,11 @@ bool TwitchIRC::fetchServerMessage(string &message) {
 		}
 		else if(rc == SocketCode::NoError) {
 			if (bytesRead > 0) {
-				//Got some Data
-				incomingBuffer.size = bytesRead;
-				//ACHAR* i = &incomingBuffer.data[0];
-				//while(*i != '\0') {
-				//	message.push_back(*i);
-				//	i++;
-				//}
-				message += string((ACHAR *)incomingBuffer.data);
+				response += string((ACHAR *)buffer);
+				delete buffer;
+				buffer = (U8*)malloc(_MAXRECV);
 				//Check if the server sent it all in one go
-				if (message.size() > 1 && message[message.size() - 2] == '\r' && message[message.size() - 1] == '\n') {
+				if (response.size() > 1 && response[response.size() - 2] == '\r' && response[response.size() - 1] == '\n') {
 					return true;
 				}
 			}
@@ -175,7 +170,7 @@ bool TwitchIRC::fetchServerMessage(string &message) {
 				if (bytesRead < 0) {
 					//What have you done????
 					cout << "You have caused some kind of voo-doo magic (" << errno << ") to occur, please stop..." << endl;
-					message = "";
+					response = "";
 					return false;
 				}
 				//End of the buffer!

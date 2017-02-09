@@ -19,41 +19,6 @@
 #define _MAXRECV 1024
 #endif
 
-template <typename T> class incomingData {
-	public:
-		//Members
-		bool deleteContainer;
-		T* data;
-		U32 size;
-
-		incomingData() : deleteContainer(false), data(NULL), size(0) { }
-		incomingData(T* in, U32 s, bool dC = false) : deleteContainer(dC), data(in), size(s) { }
-		incomingData(const incomingData<T> &t) : deleteContainer(t.deleteContainer),
-												 data(t.data),
-												 size(t.size) { }
-
-		~incomingData() {
-			reset();
-		}
-
-		void alloc(const U32 newSize) {
-			reset();
-
-			deleteContainer = true;
-			data = (T*)malloc(newSize);
-			size = newSize;
-		}
-
-		void reset() {
-			if (deleteContainer) {
-				delete data;
-			}
-			deleteContainer = false;
-			data = NULL;
-			size = 0;
-		}
-};
-
 class GeneralSocket {
 	public:
 		//Enumeration

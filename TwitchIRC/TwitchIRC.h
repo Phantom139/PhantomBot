@@ -49,7 +49,7 @@ class TwitchIRC {
      private:
          /* Private Class Methods */
          //Function called during the update to check for new messages
-         bool fetchServerMessage(string &message);
+         bool fetchServerMessage();
 
          /* Private Class Members */
          //Thread instance which runs the AutoPing command
@@ -62,8 +62,10 @@ class TwitchIRC {
          string _connectedChannel;
          //Socket object
          Socket *_socketObj;
-		 //Incoming Data Buffer
-		 incomingData<S8> incomingBuffer;
+		 //Data buffer
+		 U8 *buffer;
+		 
+		 string response;
 };
 
 #endif //_TWITCHIRC_H
