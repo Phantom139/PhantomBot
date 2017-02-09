@@ -36,10 +36,10 @@ TwitchIRC::TwitchIRC(UFC32 nick, UFC32 usr, UFC32 pass, UFC32 addr, U32 port, UF
     const string uS = string("USER " + string(usr) + "\r\n");
     //Password must be sent first, then our information
     if(pS.size()) {
-        TwitchCommandLimit::fetchInstance().PushCommand(pS);
+        TwitchCommandLimit::fetchInstance().SendCommand(pS);
     }
-    TwitchCommandLimit::fetchInstance().PushCommand(nS);
-    TwitchCommandLimit::fetchInstance().PushCommand(uS);
+    TwitchCommandLimit::fetchInstance().SendCommand(nS);
+    TwitchCommandLimit::fetchInstance().SendCommand(uS);
     //Wait for the welcome reply...
     string response;
     fetchServerMessage(response);
@@ -54,13 +54,13 @@ TwitchIRC::TwitchIRC(UFC32 nick, UFC32 usr, UFC32 pass, UFC32 addr, U32 port, UF
         const string aCS1 = string("CAP REQ :twitch.tv/commands\r\n");
         const string aCS2 = string("CAP REQ :twitch.tv/membership\r\n");
         const string aCS3 = string("CAP REQ :twitch.tv/tags\r\n");
-        TwitchCommandLimit::fetchInstance().PushCommand(aCS1);
-        TwitchCommandLimit::fetchInstance().PushCommand(aCS2);
-        TwitchCommandLimit::fetchInstance().PushCommand(aCS3);
+        TwitchCommandLimit::fetchInstance().SendCommand(aCS1);
+        TwitchCommandLimit::fetchInstance().SendCommand(aCS2);
+        TwitchCommandLimit::fetchInstance().SendCommand(aCS3);
         Lib::writeToLog("PhantomBotLog.txt", "{Twitch} Connected to TwitchIRC, connecting to channel '#" + string(channel) + "'.");
         //And finally... connect to the channel
         const string cS = string("JOIN " + string(channel) + "\r\n");
-        TwitchCommandLimit::fetchInstance().PushCommand(cS);
+        TwitchCommandLimit::fetchInstance().SendCommand(cS);
         //Send a intro message to init stuff...
         SendChatMessage("PhantomBot Now Connected to channel...");
         //Set up AutoPing command

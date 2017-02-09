@@ -83,7 +83,6 @@ void TwitchCommandLimit::Update() {
 			if (currentSendCount == 0) {
 				Time::utcTime(curTVal);
 			}
-			currentSendCount++;
 			//Send it!          
 			SendCommand(nextCmd);
 		}
@@ -102,7 +101,6 @@ void TwitchCommandLimit::Update() {
 			if (currentSendCount == 0) {
 				Time::utcTime(curTVal);
 			}
-			currentSendCount++;
 			//Send it!          
 			SendCommand(nextCmd);
 		}
@@ -127,6 +125,7 @@ void TwitchCommandLimit::SendCommand(const string command) {
     	cout << "BOT: Command '" << Lib::formatForPrint(command).c_str() << "' failed to send." << endl;        	
     }
     else {
+		currentSendCount++;
     	cout << "BOT: Command '" << Lib::formatForPrint(command).c_str() << "' successfully sent." << endl;
     }
 }
