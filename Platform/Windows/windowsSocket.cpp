@@ -140,8 +140,13 @@
 		*bytesRead = ::recv(sObj, (ACHAR *)buffer, bufferSize, 0);
 		switch (*bytesRead) {
 			case -1:
-				cout << "Socket::Recieve() Status: -1: " << WSAGetLastError() << "\n";
-				return RecieveError;
+				if(WSAGetLastError() == WSAETIMEDOUT) {
+					return Timeout;
+				}
+				else {
+					cout << "Socket::Recieve() Status: -1: " << WSAGetLastError() << "\n";
+					return RecieveError;
+				}
 
 			case 0:
 				cout << "Socket::Recieve(): Server issued disconnect command.\n";

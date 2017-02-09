@@ -160,9 +160,14 @@ bool TwitchIRC::fetchServerMessage(string &message) {
 			if (bytesRead > 0) {
 				//Got some Data
 				incomingBuffer.size = bytesRead;
-				message += (UFC32)incomingBuffer.data;
+				//ACHAR* i = &incomingBuffer.data[0];
+				//while(*i != '\0') {
+				//	message.push_back(*i);
+				//	i++;
+				//}
+				message += string((ACHAR *)incomingBuffer.data);
 				//Check if the server sent it all in one go
-				if (message[message.size() - 2] == '\r' && message[message.size() - 1] == '\n') {
+				if (message.size() > 1 && message[message.size() - 2] == '\r' && message[message.size() - 1] == '\n') {
 					return true;
 				}
 			}

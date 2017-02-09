@@ -126,14 +126,19 @@
 	SocketCode Socket::receive(U8 *buffer, S32 bufferSize, S32 *bytesRead) const {
 		*bytesRead = ::recv(sObj, (ACHAR *)buffer, bufferSize, 0);
 		switch (*bytesRead) {
-		case -1:
-			cout << "Socket::Recieve() Status: -1: " << errno << "\n";
-			return RecieveError;
+			case -1:
+				if(errno != 11) {
+					cout << "Socket::Recieve() Status: -1: " << errno << "\n";
+					return RecieveError;
+				}
+				else {
+					return Timeout;
+				}
 
-		case 0:
-			cout << "Socket::Recieve(): Server issued disconnect command.\n";
-			//onServerDisconect(); //TO-Do: Fix const Socket error...
-			return Disconnected;
+			case 0:
+				cout << "Socket::Recieve(): Server issued disconnect command.\n";
+				//onServerDisconect(); //TO-Do: Fix const Socket error...
+				return Disconnected;
 		}
 		return NoError;
 	}

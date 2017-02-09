@@ -40,13 +40,13 @@ template <typename T> class incomingData {
 			reset();
 
 			deleteContainer = true;
-			data = new T[newSize];
+			data = (T*)malloc(newSize);
 			size = newSize;
 		}
 
 		void reset() {
 			if (deleteContainer) {
-				delete[] data;
+				delete data;
 			}
 			deleteContainer = false;
 			data = NULL;
@@ -63,6 +63,7 @@ class GeneralSocket {
 			ConnectionFailed,
 			NoError,
 			RecieveError,
+			Timeout,
 			InvalidSocket,
 			Unknown
 		};
