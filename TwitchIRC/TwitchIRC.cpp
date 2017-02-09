@@ -23,6 +23,7 @@ TwitchIRC::TwitchIRC(UFC32 nick, UFC32 usr, UFC32 pass, UFC32 addr, U32 port, UF
     }
     serverAddr = addr;
     serverPort = port;
+	_socketObj->setNonBlocking();
     cout << "Initializing Command Instances" << endl;
     //Init the command limit instance...
     TwitchCommandLimit::fetchInstance().Init(_socketObj, channel);
