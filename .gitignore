@@ -11,3 +11,4 @@ PhantomBot.vcxproj.filters
 *.log
 *.iobj
 Release/PhantomBot.ipdb
+*.dev

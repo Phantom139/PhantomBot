@@ -8,7 +8,7 @@
 #ifdef PHANTOMBOT_WINDOWS
 
 	Socket::Socket() : sObj(INVALID_SOCKET) {
-
+		inBuff = new ACHAR[_MAXRECV];
 	}
 
 	Socket::~Socket() {
@@ -136,11 +136,14 @@
 		return true;
 	}
 
-	SocketCode Socket::receive(U8 *buffer, S32 bufferSize, S32 *bytesRead) const {
-		*bytesRead = ::recv(sObj, (ACHAR *)buffer, bufferSize, 0);
+	SocketCode Socket::receive(ACHAR *buffer, S32 bufferSize, S32 *bytesRead) const {
+		memset(inBuff, NULL, sizeof(inBuff));
+		*bytesRead = ::recv(sObj, (ACHAR *)inBuff, bufferSize, 0);
+		strcpy(buffer, inBuff);
+		//
 		switch (*bytesRead) {
 			case -1:
-				if(WSAGetLastError() == WSAETIMEDOUT) {
+				if(WSAGetLastError() == WSAETIMEDOUT || WSAGetLastError() == WSAEWOULDBLOCK) {
 					return Timeout;
 				}
 				else {

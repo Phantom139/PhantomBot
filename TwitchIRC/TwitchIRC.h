@@ -63,7 +63,7 @@ class TwitchIRC {
          //Socket object
          Socket *_socketObj;
 		 //Data buffer
-		 U8 *buffer;
+		 ACHAR *buffer;
 		 
 		 string response;
 };

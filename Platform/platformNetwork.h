@@ -45,7 +45,7 @@ class GeneralSocket {
 		virtual bool close() = 0;
 		virtual bool shutdown() = 0;
 		virtual bool send(UFC32 message) const = 0;
-		virtual SocketReturnCode receive(U8 *buffer, S32 bufferSize, S32 *bytesRead) const = 0;
+		virtual SocketReturnCode receive(ACHAR *buffer, S32 bufferSize, S32 *bytesRead) const = 0;
 		virtual void setNonBlocking(const bool status = true) = 0;
 		virtual bool isValidSocket() const = 0;
 
@@ -54,6 +54,9 @@ class GeneralSocket {
 		virtual void onConnectFailed() { }
 		virtual void onSelfDisconnect() { }
 		virtual void onServerDisconect() { }
+
+	protected:
+		ACHAR *inBuff;
 };
 
 //Easy Access Typedef

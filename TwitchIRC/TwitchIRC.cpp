@@ -15,7 +15,7 @@ TwitchIRC::TwitchIRC(UFC32 nick, UFC32 usr, UFC32 pass, UFC32 addr, U32 port, UF
     cout << "IRCClient: Establishing" << endl;
     Lib::writeToLog("PhantomBotLog.txt", "{C++} Establishing TwitchIRC Instance");
     //Create the buffer
-    buffer = (U8*)malloc(_MAXRECV);
+    buffer = new ACHAR[_MAXRECV];
     //Create the socket
     _socketObj = Lib::createSocketAndConnect(addr, port);
     if(!_socketObj) {
@@ -95,8 +95,8 @@ void TwitchIRC::Update() {
         	TwitchUserState::fetchInstance().Process(response);         	
         }    
         else {
-        	cout << "Got unknown response: " << response << endl;
-        	Lib::writeToLog("PhantomBotLog.txt", "{Twitch} UIID Response '" + response + "'.");
+        	//cout << "Got unknown response: " << response << endl;
+        	//Lib::writeToLog("PhantomBotLog.txt", "{Twitch} UIID Response '" + response + "'.");
         }
     }
 }
@@ -159,8 +159,7 @@ bool TwitchIRC::fetchServerMessage() {
 		else if(rc == SocketCode::NoError) {
 			if (bytesRead > 0) {
 				response += string((ACHAR *)buffer);
-				delete buffer;
-				buffer = (U8*)malloc(_MAXRECV);
+				fill_n(buffer, sizeof(buffer), NULL);
 				//Check if the server sent it all in one go
 				if (response.size() > 1 && response[response.size() - 2] == '\r' && response[response.size() - 1] == '\n') {
 					return true;
