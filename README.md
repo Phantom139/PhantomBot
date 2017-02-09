@@ -1,7 +1,7 @@
 # Phantom Bot Twitch IRC Project
-# CURRENT VERSION: Alpha 4 (Alpha 5 I.D.B.)
+# CURRENT VERSION: Alpha 5 (Development Build)
 ## By Robert C. Fritzen (Phantom139)
-## Written & Compiled on Ubuntu 16.04 LTS / Windows 10
+## Supported Platforms: Windows 10, Linux (Ubuntu 16.04 Tested)
 
 ### Prerequisites ###
 No Libraries Required!!! This project uses all native C++11 code. 
@@ -24,9 +24,9 @@ There are two bot config files you can use.
 ### Features ###
 This is a very basic Twitch IRC bot with a very flexible and easy to navigate code-base. At it's core, this bot has the following features:
 
-* Connection Interface via Linux Socket Instance
+* Connection via native Sockets
 * Message Parsing System to Inquire and Parse Twitch IRC Commands
-* Command Limit Instance to prevent the bot from exceeding the limits imposed by the Twitch API
+* Command Limit Instance to prevent the bot from exceeding the limits imposed by the Twitch IRC
 * Logging system for both command and chat logging
 * Admin User Interface to have quick access to defining users with administrative capabilities for in-stream commands
 * Custom Command System to allow quick and easy deployment of custom chat commands
@@ -89,4 +89,4 @@ Finally in the class instance below, you'll need to tell the bot to trigger your
 And that's about it! From this, you should be able to make pretty much anything your coding capabilities allow you to do. Best of luck!
 
 ### Bug Reporting ###
-This is still a very early project in the alpha stage, and therefore bugs are to be expected. If you encounter any, please report them on the issues page here.
+Please report and bugs or problems on the Issues page here. Please use the flags appropriately. Duplicate or non-problem bugs will be removed.
