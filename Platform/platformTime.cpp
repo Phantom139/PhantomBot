@@ -19,7 +19,7 @@ void GTime::fetchSysTime(ACHAR *dst) {
 	TimeVars t;
 	Time::sysTime(t);
 	ACHAR buffer[64];
-	sprintf_s(buffer, sizeof(buffer), "%02d:%02d:02d", t.hours, t.minutes, t.seconds);
+	std::sprintf(buffer, "%02d:%02d:02d", t.hours, t.minutes, t.seconds);
 	strcpy(dst, buffer);
 }
 
@@ -27,7 +27,7 @@ void GTime::fetchDateString(ACHAR *dst) {
 	TimeVars t;
 	Time::sysTime(t);
 	ACHAR buffer[64];
-	sprintf_s(buffer, sizeof(buffer), "%02d/%02d/%02d", t.months, t.dayNum, (t.years % 100));
+	std::sprintf(buffer, "%02d/%02d/%02d", t.months, t.dayNum, (t.years % 100));
 	strcpy(dst, buffer);
 }
 

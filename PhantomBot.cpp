@@ -13,6 +13,7 @@
 PhantomBot::PhantomBot() : irc(NULL) {
 	initialized = false;
 	wantsQuit = false;
+	readInputThread = NULL;
 }
 
 PhantomBot::~PhantomBot() {
@@ -33,31 +34,38 @@ void PhantomBot::init(vector<string> &conf) {
 	}
 	//Initialize IRC Module and Input Module
 	irc = new TwitchIRC(conf[0].c_str(), conf[0].c_str(), conf[4].c_str(), conf[1].c_str(), (U32)atoi(conf[2].c_str()), conf[3].c_str());
-	ircThread = new thread(&PhantomBot::ircTick, this);
-	inputThread = new thread(&PhantomBot::inputTick, this);
 	initialized = true;
+	run();
 }
 
-void PhantomBot::ircTick() {
-	while (irc->SocketActive()) {
-		irc->Update();
-	}
-	ircThread->join();
-}
-
-void PhantomBot::inputTick() {
-	while (!wantsQuit) {
-		//Run Code...
+void PhantomBot::readInput(atomic<bool> &fromRun) {
+	while (fromRun.load()) {
 		cout << "[PhantomBot]: ";
-		getline(cin, input);
+		cin >> input;
 		if (!irc->ProcessConsoleCommand(input.c_str())) {
+			fromRun.store(false);
 			wantsQuit = true;
 		}
 		input = "";
+		cout << endl;
 	}
-	//Signal Socket to end.
-	irc->CloseSocket();
-	inputThread->join();
+}
+
+void PhantomBot::run() {
+	atomic<bool> runAtomic(true);
+	readInputThread = new thread(&PhantomBot::readInput, this, ref(runAtomic));
+	while (runAtomic.load()) {
+		if (wantsQuit) {
+			irc->CloseSocket();
+			break;
+		}
+		while (irc->SocketActive()) {
+			irc->Update();
+		}
+	}
+	//Quit.
+	runAtomic.store(false);
+	readInputThread->join();
 }
 
 /*

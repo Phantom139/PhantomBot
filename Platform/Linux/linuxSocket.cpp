@@ -102,8 +102,8 @@
 			return false;
 		}
 		S32 retCode = ::shutdown(sObj, SHUT_RDWR);
-		if (retCode == SOCKET_ERROR) {
-			cout << "Socket::shutdown(): Failed to shut down socket: " << WSAGetLastError() << endl;
+		if (retCode != 0) {
+			cout << "Socket::shutdown(): Failed to shut down socket: " << errno << endl;
 			::close(sObj);
 			sObj = -1;
 			return false;
@@ -140,7 +140,7 @@
 
 	void Socket::setNonBlocking(const bool status) {
 		S32 options;
-		options = fcntl(_msock, F_GETFL);
+		options = fcntl(sObj, F_GETFL);
 		if (options < 0) {
 			return;
 		}
@@ -150,7 +150,7 @@
 		else {
 			options = (options & ~O_NONBLOCK);
 		}
-		fcntl(_msock, F_SETFL, options);
+		fcntl(sObj, F_SETFL, options);
 	}
 
 	bool Socket::isValidSocket() const {
