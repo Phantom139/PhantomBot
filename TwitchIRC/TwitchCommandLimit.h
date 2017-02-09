@@ -19,11 +19,9 @@ struct TwitchCommandLimit {
     /* Class Enumerations */
     enum TwitchLimits {
         //How many commands can we send in a 30 second period
-        COMMAND_LIMIT_NORMAL = 15,
+        COMMAND_LIMIT_NORMAL = 20,
         //If we're a op/mod, how many?
-        COMMAND_LIMIT_OPMOD = 95,
-        //How many spaces are we allocating for "forced" commands
-        COMMAND_LIMIT_FORCED = 5,
+        COMMAND_LIMIT_OPMOD = 100,
     };
 
     /* Methods */
@@ -56,14 +54,16 @@ struct TwitchCommandLimit {
 
     private:
         /* Members */
+		//The update thread
+		thread *updateThread;
         //The name of the channel
         string channel;
+		//The queue of force commands
+		queue<string> forcedCommands;
         //The Queue of commands that will be processed
-        queue<string> commands;
+        queue<string> normalCommands;
         //How many commands have we sent from the last 30s update?
         S32 currentSendCount;
-        //How many forced commands have we sent in the last 30s update?
-        S32 forcedSendCount;
         //Do we have mod status?
         bool isModOrOp;
         //The timeval at the time of the currentSendCount initiation

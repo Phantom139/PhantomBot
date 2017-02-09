@@ -22,7 +22,7 @@
 				virtual bool close();
 				virtual bool shutdown();
 				virtual bool send(UFC32 message) const;
-				virtual SocketCode receive(U8 *buffer, S32 bufferSize, S32 *bytesRead) const;
+				virtual SocketCode receive(ACHAR *buffer, S32 bufferSize, S32 *bytesRead) const;
 				virtual void setNonBlocking(const bool status = true);
 				virtual bool isValidSocket() const;
 

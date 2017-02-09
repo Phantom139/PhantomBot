@@ -1,5 +1,4 @@
 .vs/PhantomBot/v14/.suo
-PhantomBot.sln
 *.db
 PhantomBot.VC.VC.opendb
 *.vcxproj
@@ -10,4 +9,6 @@ PhantomBot.vcxproj.filters
 *.tlog
 *.log
 *.iobj
+PhantomBotLog.txt
 Release/PhantomBot.ipdb
+*.dev

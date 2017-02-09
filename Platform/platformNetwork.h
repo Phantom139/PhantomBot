@@ -19,41 +19,6 @@
 #define _MAXRECV 1024
 #endif
 
-template <typename T> class incomingData {
-	public:
-		//Members
-		bool deleteContainer;
-		T* data;
-		U32 size;
-
-		incomingData() : deleteContainer(false), data(NULL), size(0) { }
-		incomingData(T* in, U32 s, bool dC = false) : deleteContainer(dC), data(in), size(s) { }
-		incomingData(const incomingData<T> &t) : deleteContainer(t.deleteContainer),
-												 data(t.data),
-												 size(t.size) { }
-
-		~incomingData() {
-			reset();
-		}
-
-		void alloc(const U32 newSize) {
-			reset();
-
-			deleteContainer = true;
-			data = new T[newSize];
-			size = newSize;
-		}
-
-		void reset() {
-			if (deleteContainer) {
-				delete[] data;
-			}
-			deleteContainer = false;
-			data = NULL;
-			size = 0;
-		}
-};
-
 class GeneralSocket {
 	public:
 		//Enumeration
@@ -63,6 +28,7 @@ class GeneralSocket {
 			ConnectionFailed,
 			NoError,
 			RecieveError,
+			Timeout,
 			InvalidSocket,
 			Unknown
 		};
@@ -79,7 +45,7 @@ class GeneralSocket {
 		virtual bool close() = 0;
 		virtual bool shutdown() = 0;
 		virtual bool send(UFC32 message) const = 0;
-		virtual SocketReturnCode receive(U8 *buffer, S32 bufferSize, S32 *bytesRead) const = 0;
+		virtual SocketReturnCode receive(ACHAR *buffer, S32 bufferSize, S32 *bytesRead) const = 0;
 		virtual void setNonBlocking(const bool status = true) = 0;
 		virtual bool isValidSocket() const = 0;
 
@@ -88,6 +54,9 @@ class GeneralSocket {
 		virtual void onConnectFailed() { }
 		virtual void onSelfDisconnect() { }
 		virtual void onServerDisconect() { }
+
+	protected:
+		ACHAR *inBuff;
 };
 
 //Easy Access Typedef

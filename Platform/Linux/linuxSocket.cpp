@@ -8,7 +8,7 @@
 #ifdef PHANTOMBOT_LINUX
 
 	Socket::Socket() : sObj(-1) {
-
+		inBuff = new ACHAR[_MAXRECV];
 	}
 
 	Socket::~Socket() {
@@ -123,17 +123,25 @@
 		return true;
 	}
 
-	SocketCode Socket::receive(U8 *buffer, S32 bufferSize, S32 *bytesRead) const {
-		*bytesRead = ::recv(sObj, (ACHAR *)buffer, bufferSize, 0);
+	SocketCode Socket::receive(ACHAR *buffer, S32 bufferSize, S32 *bytesRead) const {
+		memset(inBuff, NULL, sizeof(inBuff));
+		*bytesRead = ::recv(sObj, (ACHAR *)inBuff, bufferSize, 0);
+		strcpy(buffer, inBuff);
+		//
 		switch (*bytesRead) {
-		case -1:
-			cout << "Socket::Recieve() Status: -1: " << errno << "\n";
-			return RecieveError;
+			case -1:
+				if(errno != 11) {
+					cout << "Socket::Recieve() Status: -1: " << errno << "\n";
+					return RecieveError;
+				}
+				else {
+					return Timeout;
+				}
 
-		case 0:
-			cout << "Socket::Recieve(): Server issued disconnect command.\n";
-			//onServerDisconect(); //TO-Do: Fix const Socket error...
-			return Disconnected;
+			case 0:
+				cout << "Socket::Recieve(): Server issued disconnect command.\n";
+				//onServerDisconect(); //TO-Do: Fix const Socket error...
+				return Disconnected;
 		}
 		return NoError;
 	}
