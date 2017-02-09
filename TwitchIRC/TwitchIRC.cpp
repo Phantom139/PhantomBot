@@ -97,8 +97,6 @@ void TwitchIRC::Update() {
         	Lib::writeToLog("PhantomBotLog.txt", "{Twitch} UIID Response '" + Lib::formatForPrint(response) + "'.");
         }
     }
-    //Update the command process
-    TwitchCommandLimit::fetchInstance().Update();
 }
 
 void TwitchIRC::CloseSocket() {

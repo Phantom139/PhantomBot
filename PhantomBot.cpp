@@ -13,7 +13,6 @@
 PhantomBot::PhantomBot() : irc(NULL) {
 	initialized = false;
 	wantsQuit = false;
-	readInputThread = NULL;
 }
 
 PhantomBot::~PhantomBot() {
@@ -38,34 +37,10 @@ void PhantomBot::init(vector<string> &conf) {
 	run();
 }
 
-void PhantomBot::readInput(atomic<bool> &fromRun) {
-	while (fromRun.load()) {
-		cout << "[PhantomBot]: ";
-		cin >> input;
-		if (!irc->ProcessConsoleCommand(input.c_str())) {
-			fromRun.store(false);
-			wantsQuit = true;
-		}
-		input = "";
-		cout << endl;
-	}
-}
-
 void PhantomBot::run() {
-	atomic<bool> runAtomic(true);
-	readInputThread = new thread(&PhantomBot::readInput, this, ref(runAtomic));
-	while (runAtomic.load()) {
-		if (wantsQuit) {
-			irc->CloseSocket();
-			break;
-		}
-		while (irc->SocketActive()) {
-			irc->Update();
-		}
+	while (irc->SocketActive()) {
+		irc->Update();
 	}
-	//Quit.
-	runAtomic.store(false);
-	readInputThread->join();
 }
 
 /*

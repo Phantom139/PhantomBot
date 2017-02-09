@@ -10,7 +10,7 @@
     TwitchCommandLimit Struct
 **/
 
-TwitchCommandLimit::TwitchCommandLimit() : aSock(NULL), currentSendCount(0), forcedSendCount(0), isModOrOp(false), channel(), debugMode(false) {
+TwitchCommandLimit::TwitchCommandLimit() : aSock(NULL), currentSendCount(0), isModOrOp(false), channel(), debugMode(false) {
 	Time::utcTime(curTVal);
 	Time::utcTime(curFVal);
 }
@@ -22,6 +22,7 @@ void TwitchCommandLimit::Init(Socket *sO, string cName) {
 	}
 	aSock = sO;
 	channel = cName;
+	updateThread = new thread(&TwitchCommandLimit::Update, this);
 }
 
 void TwitchCommandLimit::ProcessUserState(const string command) {
@@ -45,81 +46,69 @@ void TwitchCommandLimit::ProcessUserState(const string command) {
 }
 
 void TwitchCommandLimit::AddCommand(const string command) {
-    commands.push(command);
+    normalCommands.push(command);
     Lib::writeToLog("PhantomBotLog.txt", "{C++} Added command '" + Lib::formatForPrint(command) + "'.");
     cout << "BOT: Command '" << Lib::formatForPrint(command).c_str() << "' added to queue..." << endl;
 }
 
 void TwitchCommandLimit::PushCommand(const string command) {
     Lib::writeToLog("PhantomBotLog.txt", "{C++} Attempting to push command '" + Lib::formatForPrint(command) + "'.");
-    cout << "BOT: Command '" << command.c_str() << "' added to queue under FORCE priority.. attempting to send now." << endl;
-    //Check if it's been 30s since our last "push"
-    TimeVars cur;
-    Time::utcTime(cur); 
-	if((Time::makeGMTime(cur) - Time::makeGMTime(curFVal)) >= 30) {
-        forcedSendCount = 0;
-    }
-    //If it hasn't been 30s, we need to verify that we have "allocation" available to force a mesage through
-    if(forcedSendCount >= COMMAND_LIMIT_FORCED) {
-        //we're out of FORCE spaces, check our normal space?
-        if((isModOrOp && currentSendCount >= COMMAND_LIMIT_OPMOD-1)
-           || (!isModOrOp && currentSendCount >= COMMAND_LIMIT_NORMAL-1)) {
-            //We're currently over the command limit we're allocated..
-            cout << "BOT: Unable to force command '" <<  Lib::formatForPrint(command).c_str() << "', currently at command limit, command has been added to the normal queue and will be pushed once it can." << endl;
-            Lib::writeToLog("PhantomBotLog.txt", "{C++} 'Cannot push command '" + Lib::formatForPrint(command) + "', out of available message allocation limit.");
-            AddCommand(command);
-            return;
-        }
-        else {
-            //We have some space in the normal queue, run it there
-            if(currentSendCount == 0) {
-				Time::utcTime(curTVal);
-    		}
-    		currentSendCount++;
-    		SendCommand(command);
-        }                
-    }
-    //We've got some room, fire it!
-    if(forcedSendCount == 0) {
-		Time::utcTime(curFVal);
-    }
-    forcedSendCount++;
-    SendCommand(command);                       
+    cout << "BOT: Command '" << command.c_str() << "' added to queue under FORCE priority." << endl;
+	forcedCommands.push(command);
 }
 
 void TwitchCommandLimit::Update() {
-	if(!aSock) {
-		cout << "No socket object" << endl;
-		return;
+	while (aSock->isValidSocket()) {
+		TimeVars cur;
+		Time::utcTime(cur);
+		string nextCmd;
+		//Check the time
+		if ((Time::makeGMTime(cur) - Time::makeGMTime(curFVal)) >= 30) {
+			//All good!
+			currentSendCount = 0;
+		}
+		//Do we have anything to process?
+		while (!forcedCommands.empty()) {
+			//Check how many commands we've sent
+			if ((isModOrOp && currentSendCount >= COMMAND_LIMIT_OPMOD - 1)
+				|| (!isModOrOp && currentSendCount >= COMMAND_LIMIT_NORMAL - 1)) {
+				//We're currently over the command limit we're allocated..
+				// Stop here.
+				break;
+			}
+			//We're ok to process commands, grab the nextCmd command and pop it from the list
+			nextCmd = forcedCommands.front();
+			forcedCommands.pop();
+			//Add one to our counter, set the timer if zero
+			if (currentSendCount == 0) {
+				Time::utcTime(curTVal);
+			}
+			currentSendCount++;
+			//Send it!          
+			SendCommand(nextCmd);
+		}
+		while (!normalCommands.empty()) {
+			//Check how many commands we've sent
+			if ((isModOrOp && currentSendCount >= COMMAND_LIMIT_OPMOD - 1)
+				|| (!isModOrOp && currentSendCount >= COMMAND_LIMIT_NORMAL - 1)) {
+				//We're currently over the command limit we're allocated..
+				// Stop here.
+				break;
+			}
+			//We're ok to process commands, grab the nextCmd command and pop it from the list
+			nextCmd = normalCommands.front();
+			normalCommands.pop();
+			//Add one to our counter, set the timer if zero
+			if (currentSendCount == 0) {
+				Time::utcTime(curTVal);
+			}
+			currentSendCount++;
+			//Send it!          
+			SendCommand(nextCmd);
+		}
+		this_thread::sleep_for(chrono::milliseconds(100));
 	}
-	TimeVars cur;
-	Time::utcTime(cur);
-    string nextCmd;
-    //Check the time
-	if ((Time::makeGMTime(cur) - Time::makeGMTime(curFVal)) >= 30) {
-        //All good!
-        currentSendCount = 0;
-    }
-    //Do we have anything to process?
-    while(!commands.empty()) {
-        //Check how many commands we've sent
-        if((isModOrOp && currentSendCount >= COMMAND_LIMIT_OPMOD-1)
-           || (!isModOrOp && currentSendCount >= COMMAND_LIMIT_NORMAL-1)) {
-            //We're currently over the command limit we're allocated..
-            // Stop here.
-            break;
-        }
-        //We're ok to process commands, grab the nextCmd command and pop it from the list
-        nextCmd = commands.front();
-        commands.pop();
-        //Add one to our counter, set the timer if zero
-        if(currentSendCount == 0) {
-			Time::utcTime(curTVal);
-        }
-        currentSendCount++;
-        //Send it!          
-        SendCommand(nextCmd);
-    }
+	updateThread->join();
 }
 
 const string TwitchCommandLimit::Channel() const {

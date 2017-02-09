@@ -19,15 +19,12 @@ class PhantomBot {
 		void init(vector<string> &config);
 
 	private:
-		void readInput(atomic<bool> &fromRun);
 		void run();
 
 		bool initialized;
 		bool wantsQuit;
 
-		thread *readInputThread;
 		TwitchIRC *irc;
-		string input;
 };
 
 #endif //PHANTOM_BOT_H
