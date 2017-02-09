@@ -23,7 +23,6 @@ TwitchIRC::TwitchIRC(UFC32 nick, UFC32 usr, UFC32 pass, UFC32 addr, U32 port, UF
     }
     serverAddr = addr;
     serverPort = port;
-	_socketObj->setNonBlocking();
     cout << "Initializing Command Instances" << endl;
     //Init the command limit instance...
     TwitchCommandLimit::fetchInstance().Init(_socketObj, channel);
@@ -51,6 +50,8 @@ TwitchIRC::TwitchIRC(UFC32 nick, UFC32 usr, UFC32 pass, UFC32 addr, U32 port, UF
         CloseSocket();
     }
     else {
+		//Set the socket to non-blocking mode to allow the program to continue execution
+		_socketObj->setNonBlocking();
         //Enable advanced commnads
         const string aCS1 = string("CAP REQ :twitch.tv/commands\r\n");
         const string aCS2 = string("CAP REQ :twitch.tv/membership\r\n");
