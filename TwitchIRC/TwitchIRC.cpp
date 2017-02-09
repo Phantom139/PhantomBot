@@ -161,6 +161,10 @@ bool TwitchIRC::fetchServerMessage(string &message) {
 				//Got some Data
 				incomingBuffer.size = bytesRead;
 				message += (UFC32)incomingBuffer.data;
+				//Check if the server sent it all in one go
+				if (message[message.size() - 2] == '\r' && message[message.size() - 1] == '\n') {
+					return true;
+				}
 			}
 			else {
 				if (bytesRead < 0) {
