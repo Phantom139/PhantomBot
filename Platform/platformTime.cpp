@@ -19,7 +19,7 @@ void GTime::fetchSysTime(ACHAR *dst) {
 	TimeVars t;
 	Time::sysTime(t);
 	ACHAR buffer[64];
-	std::sprintf(buffer, "%02d:%02d:02d", t.hours, t.minutes, t.seconds);
+	std::sprintf(buffer, "%02d:%02d:%02d", t.hours, t.minutes, t.seconds);
 	strcpy(dst, buffer);
 }
 
