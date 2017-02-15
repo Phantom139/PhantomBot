@@ -31,6 +31,7 @@
 				virtual void onConnectFailed();
 				virtual void onSelfDisconnect();
 				virtual void onServerDisconect();
+				virtual void onResponse(UFC32 line);
 
 			private:
 				SOCKET sObj;

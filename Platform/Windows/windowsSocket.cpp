@@ -144,6 +144,7 @@
 		switch (*bytesRead) {
 			case -1:
 				if(WSAGetLastError() == WSAETIMEDOUT || WSAGetLastError() == WSAEWOULDBLOCK) {
+					*bytesRead = 0; //<- Phantom139: Timeout after recv call will now trigger end-of-line call on recieveMessage
 					return Timeout;
 				}
 				else {
@@ -184,6 +185,10 @@
 	}
 
 	void Socket::onServerDisconect() {
+
+	}
+
+	void Socket::onResponse(UFC32 line) {
 
 	}
 

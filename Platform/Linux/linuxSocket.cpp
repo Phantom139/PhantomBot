@@ -135,6 +135,7 @@
 					return RecieveError;
 				}
 				else {
+					*bytesRead = 0; //<- Phantom139: Timeout after recv call will now trigger end-of-line call on recieveMessage
 					return Timeout;
 				}
 
@@ -178,6 +179,10 @@
 	}
 
 	void Socket::onServerDisconect() {
+
+	}
+
+	void Socket::onResponse(UFC32 line) {
 
 	}
 

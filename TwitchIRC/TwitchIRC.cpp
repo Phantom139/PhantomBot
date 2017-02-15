@@ -156,7 +156,7 @@ bool TwitchIRC::fetchServerMessage() {
 			//Socket classes are programmed to automatically push the error, no need to repeat here.
 			return false;
 		}
-		else if(rc == SocketCode::NoError) {
+		else if(rc == SocketCode::NoError || rc == SocketCode::Timeout) {
 			if (bytesRead > 0) {
 				response += string((ACHAR *)buffer);
 				fill_n(buffer, sizeof(buffer), NULL);
