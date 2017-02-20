@@ -18,7 +18,7 @@ Lib Class
 */
 namespace Lib {
     //Create a socket and connect to specified instance
-    Socket *createSocketAndConnect(UFC32 addr, U32 port);
+    Socket *createSocketAndConnect(UFC32 addr, U32 port, SocketStyle style = SocketStyle::Socket_OneAndDone);
     //Fetch the current timestring
     string currentTime();
     //Fetch UTC time, unsigned integer

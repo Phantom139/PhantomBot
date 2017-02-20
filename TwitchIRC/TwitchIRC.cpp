@@ -17,7 +17,7 @@ TwitchIRC::TwitchIRC(UFC32 nick, UFC32 usr, UFC32 pass, UFC32 addr, U32 port, UF
     //Create the buffer
     buffer = new ACHAR[_MAXRECV];
     //Create the socket
-    _socketObj = Lib::createSocketAndConnect(addr, port);
+    _socketObj = Lib::createSocketAndConnect(addr, port, SocketStyle::Socket_Persistent);
     if(!_socketObj) {
         cout << "Failed to establish connection to " << addr << endl;
         Lib::writeToLog("PhantomBotLog.txt", "{C++} Failed to connect to " + string(addr)+ ".");

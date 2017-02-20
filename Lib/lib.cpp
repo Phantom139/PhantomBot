@@ -8,7 +8,7 @@
 
 namespace Lib {
 
-	Socket *createSocketAndConnect(UFC32 addr, U32 port) {
+	Socket *createSocketAndConnect(UFC32 addr, U32 port, SocketStyle style) {
 		Socket *s = new Socket();
 		if(!s->create()) {
 		    cout << "Lib::createSocketAndConnect(): Creation Failed" << endl;
@@ -18,6 +18,8 @@ namespace Lib {
 		    cout << "Lib::createSocketAndConnect(): Connection Failed" << endl;
 		    return NULL;        
 		}
+		s->setStyle(style);
+		Network::fetchInstance().addSocket(s);
 		return s;
 	}
 

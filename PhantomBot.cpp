@@ -31,6 +31,8 @@ void PhantomBot::init(vector<string> &conf) {
 	if (initialized) {
 		return;
 	}
+	//Initialize the Network Module
+	Network::fetchInstance().init();
 	//Initialize IRC Module and Input Module
 	irc = new TwitchIRC(conf[0].c_str(), conf[0].c_str(), conf[4].c_str(), conf[1].c_str(), (U32)atoi(conf[2].c_str()), conf[3].c_str());
 	initialized = true;
@@ -38,9 +40,13 @@ void PhantomBot::init(vector<string> &conf) {
 }
 
 void PhantomBot::run() {
-	while (irc->SocketActive()) {
-		irc->Update();
+	while (!wantsQuit) {
+		//Run all tasks...
+		Network::fetchInstance().tick();
 	}
+	//while (irc->SocketActive()) {
+	//	irc->Update();
+	//}
 }
 
 /*
