@@ -52,7 +52,7 @@
 	typedef PlatformTypes::u_int_64 U64;
 	typedef PlatformTypes::A_CHAR ACHAR;
 	typedef PlatformTypes::W_CHAR WCHAR;
-	typedef PlatformTypes::T_CHAR TCHAR;
+	typedef PlatformTypes::T_CHAR TWCHAR;
 	typedef PlatformTypes::char_8 UTF8;
 	typedef PlatformTypes::char_16 UTF16;
 	typedef PlatformTypes::char_32 UTF32;
