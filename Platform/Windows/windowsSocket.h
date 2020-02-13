@@ -26,6 +26,8 @@
 				virtual void setNonBlocking(const bool status = true);
 				virtual bool isValidSocket() const;
 
+				virtual SOCKET get() const { return sObj; }
+
 				//Callbacks
 				virtual void onConnected();
 				virtual void onConnectFailed();

@@ -26,6 +26,9 @@ void Network::tick() {
 		return;
 	}
 
+	S32 optVal;
+	S32 optLen;
+	S32 bytesRead;
 	bool closeSocket = false;
 
 	for (SIZE_T i = 0; i < socketList.size(); i++) {
@@ -43,9 +46,59 @@ void Network::tick() {
 				break;
 
 			case SocketStatus::StatePending:
+				//Any updates?
+				if (getsockopt(s->get(), SOL_SOCKET, SO_ERROR, (ACHAR *)&optVal, &optLen)) {
+					cout << "Network::tick(): Socket in slot " << i << " unable to access options, killing." << endl;
+					closeSocket = true;
+				}
+				else {
+					if (optVal == EINPROGRESS) {
+						//We're still waiting.
+						break;
+					}
+					else if (optVal == 0) {
+						//We're connected!
+						s->setState(SocketStatus::StateConnected);
+					}
+				}
+				break;
 
 			case SocketStatus::StateConnected:
-
+				bytesRead = 0;
+				SocketCode rc = s->receive(s->getBuffer(), _MAXRECV, &bytesRead);
+				if (rc == SocketCode::Disconnected) {
+					cout << "Server disconnected the socket object." << endl;
+					s->onServerDisconect();
+					closeSocket = true;
+				}
+				else if (rc == SocketCode::NoError) {
+					if (bytesRead > 0) {
+						s->onResponse(s->getBuffer());
+					}
+					else {
+						if (bytesRead < 0) {
+							cout << "Socket " << i << " Triggered <0 Read Error. Errno: " << errno << endl;
+						}
+						//Trigger End-Of-Buffer
+						s->onResponseRN();
+						if (s->fetchStyle() == SocketStyle::Socket_OneAndDone) {
+							//We're done, DC.
+							closeSocket = true;
+						}
+					}
+				}
+				else if (rc == SocketCode::Timeout) {
+					//Nothingto see here folks...
+				}
+				else {
+					//Error..
+					cout << "An error occured on socket " << i << " errno: " << errno << endl;
+					closeSocket = true;
+				}
+				break;
+		}
+		if (closeSocket) {
+			s->close();
 		}
 	}
 }

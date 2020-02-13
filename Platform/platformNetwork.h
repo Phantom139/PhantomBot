@@ -63,7 +63,9 @@ class GeneralSocket {
 		virtual void setState(SocketState s) { currentState = s; }
 		virtual void setStyle(SocketStyle s) { sStyle = s; }
 		virtual SocketState fetchState() const { return currentState; }
-		virtual SocketStyle fetchStyle() const { return sStyle;  }
+		virtual SocketStyle fetchStyle() const { return sStyle; }
+
+		virtual ACHAR* getBuffer() { return inBuff; }
 
 		//Callbacks
 		virtual void onConnected() { }
@@ -71,6 +73,7 @@ class GeneralSocket {
 		virtual void onSelfDisconnect() { }
 		virtual void onServerDisconect() { }
 		virtual void onResponse(UFC32 data) { }
+		virtual void onResponseRN() { }
 
 	protected:
 		ACHAR *inBuff;

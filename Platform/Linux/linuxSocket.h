@@ -26,6 +26,8 @@
 				virtual void setNonBlocking(const bool status = true);
 				virtual bool isValidSocket() const;
 
+				virtual S32 get() const { return sObj; }
+
 				//Callbacks
 				virtual void onConnected();
 				virtual void onConnectFailed();
